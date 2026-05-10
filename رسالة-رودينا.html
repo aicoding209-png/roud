@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>إلى رودينا</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep:     #0d0a0f;
+      --bg-card:     #13101a;
+      --gold:        #c9a96e;
+      --gold-light:  #e8d4a8;
+      --gold-dim:    #7a6340;
+      --red:         #c0392b;
+      --red-glow:    #e74c3c;
+      --cream:       #f5efe0;
+      --text-body:   #d4c4a8;
+      --divider:     #3a2e1e;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-deep);
+      color: var(--text-body);
+      font-family: 'Noto Naskh Arabic', 'Amiri', serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 60px 20px 80px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* ── Starfield background ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 15%, rgba(192,57,43,.07) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 80%, rgba(201,169,110,.05) 0%, transparent 55%),
+        radial-gradient(ellipse at 50% 50%, rgba(13,10,15,1) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* tiny stars */
+    .stars {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .stars span {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--gold-light);
+      animation: twinkle var(--d, 3s) ease-in-out infinite alternate;
+      opacity: 0;
+    }
+    @keyframes twinkle {
+      0%   { opacity: 0;    transform: scale(.6); }
+      100% { opacity: var(--op,.4); transform: scale(1.1); }
+    }
+
+    /* ── Card ── */
+    .letter-card {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      width: 100%;
+      background: linear-gradient(160deg, #1a1320 0%, #110e18 60%, #0f0c15 100%);
+      border: 1px solid var(--gold-dim);
+      border-radius: 4px;
+      padding: 60px 56px 70px;
+      box-shadow:
+        0 0 0 1px #2a2015,
+        0 0 60px rgba(201,169,110,.06),
+        0 30px 80px rgba(0,0,0,.7);
+      animation: fadeUp .9s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ornament corners */
+    .corner {
+      position: absolute;
+      width: 42px; height: 42px;
+      border-color: var(--gold-dim);
+      border-style: solid;
+      opacity: .7;
+    }
+    .corner-tl { top: 14px; right: 14px; border-width: 2px 0 0 2px; border-radius: 0 0 0 2px; }
+    .corner-tr { top: 14px; left:  14px; border-width: 2px 2px 0 0; border-radius: 0 0 2px 0; }
+    .corner-bl { bottom: 14px; right: 14px; border-width: 0 0 2px 2px; border-radius: 2px 0 0 0; }
+    .corner-br { bottom: 14px; left:  14px; border-width: 0 2px 2px 0; border-radius: 0 2px 0 0; }
+
+    /* ── Header ── */
+    .header-to {
+      text-align: center;
+      font-family: 'Amiri', serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      color: var(--gold-dim);
+      letter-spacing: .08em;
+      margin-bottom: 6px;
+      animation: fadeUp .9s .1s ease both;
+    }
+
+    .header-name {
+      text-align: center;
+      font-family: 'Amiri', serif;
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: var(--red);
+      line-height: 1.1;
+      text-shadow: 0 0 28px rgba(192,57,43,.45), 0 0 60px rgba(192,57,43,.18);
+      margin-bottom: 28px;
+      animation: fadeUp .9s .2s ease both;
+    }
+
+    .fleuron {
+      text-align: center;
+      font-size: 1.4rem;
+      color: var(--gold);
+      opacity: .7;
+      margin-bottom: 28px;
+      animation: fadeUp .9s .25s ease both;
+    }
+
+    /* ── Dedication block ── */
+    .dedication {
+      background: rgba(201,169,110,.04);
+      border-inline-start: 3px solid var(--red);
+      padding: 22px 24px 22px 16px;
+      margin-bottom: 36px;
+      border-radius: 2px;
+      font-family: 'Amiri', serif;
+      font-size: 1.08rem;
+      line-height: 2;
+      color: var(--gold-light);
+      animation: fadeUp .9s .3s ease both;
+    }
+
+    /* ── Divider dots ── */
+    .dots {
+      text-align: center;
+      letter-spacing: .5em;
+      color: var(--gold-dim);
+      font-size: .7rem;
+      margin: 30px 0;
+    }
+
+    /* ── Welcome block ── */
+    .welcome {
+      font-family: 'Amiri', serif;
+      font-size: 1.1rem;
+      line-height: 2.1;
+      color: var(--gold-light);
+      margin-bottom: 36px;
+      animation: fadeUp .9s .35s ease both;
+    }
+
+    /* ── Body paragraphs ── */
+    .body-text p {
+      font-size: 1.05rem;
+      line-height: 2.2;
+      color: var(--text-body);
+      margin-bottom: 26px;
+      text-align: justify;
+      animation: fadeUp .9s .4s ease both;
+    }
+
+
+    /* Inline name highlight */
+    .r-name {
+      color: var(--red);
+      font-weight: 700;
+      text-shadow: 0 0 14px rgba(192,57,43,.35);
+    }
+
+    /* ── Pledge block ── */
+    .pledge {
+      margin: 40px 0 32px;
+      padding: 28px 28px 28px 20px;
+      border: 1px solid var(--gold-dim);
+      border-radius: 3px;
+      background: rgba(201,169,110,.03);
+      animation: fadeUp .9s .45s ease both;
+    }
+    .pledge-title {
+      font-family: 'Amiri', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 18px;
+    }
+    .pledge p {
+      font-size: 1.05rem;
+      line-height: 2.2;
+      color: var(--text-body);
+      margin-bottom: 18px;
+    }
+    .pledge p:last-child { margin-bottom: 0; }
+
+    /* ── Closing ── */
+    .closing {
+      text-align: center;
+      margin-top: 44px;
+      animation: fadeUp .9s .5s ease both;
+    }
+    .closing-lines {
+      font-family: 'Amiri', serif;
+      font-size: 1.12rem;
+      line-height: 2.5;
+      color: var(--gold-light);
+      margin-bottom: 28px;
+    }
+    .closing-divider {
+      width: 120px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+      margin: 0 auto 26px;
+    }
+    .signature {
+      font-family: 'Amiri', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--gold-dim);
+      letter-spacing: .06em;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 560px) {
+      .letter-card { padding: 40px 24px 50px; }
+      .header-name { font-size: 2.3rem; }
+      .body-text p { font-size: .97rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- starfield -->
+<div class="stars" id="stars"></div>
+
+<article class="letter-card">
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+
+  <!-- Header -->
+  <p class="header-to">إلى</p>
+  <h1 class="header-name">رودينا</h1>
+  <div class="fleuron">❦</div>
+
+  <!-- Dedication -->
+  <div class="dedication">
+    إلى الأنثى التي ما مرّت على حياتي مرور العابرين، بل أقبلت كأنها البشارة التي تأخّرت لتجيء في تمامها، وكأنها الجواب الجميل لدعاءٍ طال في الغيب صعوده حتى استجاب الله له.
+  </div>
+
+  <div class="dots">· · · · ·</div>
+
+  <!-- Welcome -->
+  <div class="welcome">
+    أهلًا وسهلًا بمن طال انتظارُها، وتعاظم في القلب مقدارُها؛ حللتِ أهلًا، وسكنتِ من القلب الموضع الذي لا يليق إلا بكِ. مباركٌ هذا العهد الذي شهده الله وباركه، ومباركٌ هذا الميثاق الذي أراده الله فأتمّه على خيرٍ وطمأنينةٍ ومودّة.
+  </div>
+
+  <div class="dots">· · ·</div>
+
+  <!-- Body -->
+  <div class="body-text">
+
+    <p>
+      <span class="r-name">رودينا</span>،<br>
+      من أين يبتدئ القلب حديثه عنكِ؟ أمن تلك اللحظة الأولى التي وقعت فيها عيني عليكِ، أم من ذلك الاضطراب العذب الذي سبق حضوركِ إليّ، وكأن قلبي كان، على نحوٍ خفيّ، يعرف أنّ أمرًا جليلًا على وشك أن يحدث، وأنّ القلب، من بعد تلك اللحظة، لن يعود كما كان أبدًا.
+    </p>
+
+    <p>
+      دعيني أعود بكِ إلى ذلك المشهد الأول، إلى اللحظة التي دخلتِ فيها حياتي، لا كحدثٍ عابر، بل كتحوّلٍ كامل، بدّلتِ في داخلي ترتيب الأشياء، وأعدتِ للعمر معناه، وجعلتِ للحياة بعدكِ وجهًا آخر لا يشبه ما قبلكِ.
+    </p>
+
+    <p>
+      في التاسع من سبتمبر، جلستُ وفي صدري شعورٌ لا أُحسن له تسمية، شيءٌ بين الشوق والرهبة، بين الترقّب والانجذاب، وكان الوقت يمضي ببطءٍ مهيب، كأنّه يعرف أنّ خلف هذا الانتظار عمرًا كاملًا يقف على عتبته، وأنّ بابًا سيفتح بعد قليل، فلا يبقى في القلب شيءٌ على حاله.
+    </p>
+
+    <p>
+      بعدما أحسنتم الضيافة، وأكرمتم الجوار، وجاد الحديث بيننا بما جاد، جاءت تلك اللحظة التي تبدّلت فيها نظرتي إلى الجمال، وأدركتُ أنني لم أكن أعرفه حقًا من قبل. مشيتُ مشتاقًا لأراكِ وأنا لا أدري: أكنتُ أمشي على قدميَّ، أم على لهفتي؟ أكنتُ أتقدّم نحو الباب، أم نحو قدري الذي كُتب لي في هيئة أنثى؟
+    </p>
+
+    <p>
+      حتى إذا وقفتُ عند الباب، كنتِ أنتِ هناك... جالسةً في هدوءٍ أربكني، ومكتسيةً بجمالٍ لا يستعير ملامحه من أحد، جمالٍ يخصّكِ وحدكِ، كأنّ الله حين صاغكِ، أراد لكِ أن تكوني على صورةٍ لا تتكرّر.
+    </p>
+
+    <p>
+      رأيتكِ وأنتِ تضمّين أصابعكِ بخجل، وكأنّ الحياء نفسه كان يمرّ من بين يديكِ ويترك فيهما أثره الرقيق، ويترك فيهما من الجمال ما يجعل التفصيلة الصغيرة أكبر من أن تُنسى.
+    </p>
+
+    <p>
+      كنتِ تنظرين إلى الأسفل، وفي ذلك السكون الوادع، وفي تلك الطمأنينة الممزوجة بالخجل، شيءٌ لا يُرى بالعين وحدها، بل يُحَسّ بالقلب؛ شيءٌ يجعل المرء يقترب دون أن يخطو، ويحبّ دون أن يتكلّم، ويطمئنّ دون أن يعرف كيف.
+    </p>
+
+    <p>
+      وكان ذلك اللون الأحمر على أطراف يديكِ أكثر من تفصيلٍ عابر، كان لمسةً صغيرةً حملت من الجمال ما يكفي ليُقيم طويلًا في الذاكرة، كأنّ الأناقة أحيانًا لا تعلن نفسها بصخب، بل تأتي هادئةً، رقيقةً، ثم تظلّ، رغم صمتها، من أكثر الأشياء حضورًا وأبعدها أثرًا.
+    </p>
+
+    <p>
+      وعن ماذا أحدّثكِ يا وردتي عن شعركِ؟ ذلك الذي ينساب على كتفيكِ كانسياب ليلٍ على نافذةٍ مضيئة، ليلًا أسودَ كسرٍّ جميل، هادئًا كأنّه يخفي في خصلاته ما لا تملك اللغة أن تبوح به.
+    </p>
+
+    <p>
+      في تلك اللحظة، لم أكن أحدّق في ملامحٍ فحسب، بل كنتُ أنظر إلى دهشتي وهي تتشكّل، إلى نصيبي وهو يقف أمامي، إلى حلمٍ طالما مرّ على الخاطر بعيدًا، ثم قرّر، على غير انتظار، أن يتجسّد حقيقةً ناصعة.
+    </p>
+
+    <p>
+      وبينما أنا واقفٌ أحاول أن أستوعب في لحظةٍ واحدة كل هذا الجمال، وكل هذا الهدوء، قالوا لكِ: <em style="color:var(--gold-light)">انظري إليه.</em><br><br>
+      فرفعتِ رأسكِ... ورفعتِ معه قلبي من موضعه. نظرتِ إليّ، وابتسمتِ.
+    </p>
+
+    <p style="text-align:center; font-family:'Amiri',serif; font-size:1.3rem; color:var(--gold); letter-spacing:.05em;">
+      يا الله...
+    </p>
+
+    <p>
+      ما كانت تلك ابتسامةً عابرة، ولا كانت مجرّد ملامح لطيفة ارتسمت على وجهكِ، بل كانت نافذةً انفتحت دفعةً واحدةً في صدري، وكانت نورًا دخلني بلا استئذان، وكانت سحرًا رقيقًا، غير أنّه أصاب أعمق مكانٍ في روحي.
+    </p>
+
+    <p>
+      كانت تلك الابتسامة ساكنةً في عينيكِ، وفي خجلكِ، وفي ذلك الصفاء الذي خرج منكِ نقيًّا، ووصل إليّ صادقًا، كأنّ بين قلبي وقلبكِ طريقًا خفيًّا لا يعرف التكلّف ولا يحتاج إلى الكلام.
+    </p>
+
+    <p>
+      ومنذ تلك النظرة، لم تعد الأيام كما كانت، وصار للوقت إيقاعٌ آخر، وصار في الذاكرة وجهكِ وإن غبتِ، وصار في القلب موضعٌ لكِ لا يسعه أحدٌ سواكِ، كأنّكِ ما دخلتِه لتقيمي فيه فحسب، بل دخلتِه لتعيدي تعريفه.
+    </p>
+
+    <p>
+      أنتِ لم تكوني مجرّد أنثى رأيتها، ولا مشهدًا جميلًا مرّ أمامي ثم مضى. أنتِ كنتِ اللحظة التي تغيّر بعدها ترتيب العالم في داخلي، ويصبح للحبّ معنى أصدق، وللانتظار معنى أعمق، وللدعاء معنى أعظم.
+    </p>
+
+    <p>
+      واليوم، وقد صرتِ زوجتي، أشعر أنّ الله لم يرزقني زوجة فحسب، بل رزقني سكنًا، ومودّةً، ورحمةً، وقلبًا أودّ لو أقضي بقربه العمر كلّه، ممتنًّا لهذه النعمة في كل يوم، موقنًا أنّ بعض العطايا لا تُقاس بكثرتها، بل بعِظَم أثرها، وأنتِ من أعظم ما منّ الله به عليّ.
+    </p>
+
+  </div>
+
+  <!-- Pledge -->
+  <div class="pledge">
+    <div class="pledge-title">أعاهدكِ يا <span class="r-name">رودينا</span>،</div>
+    <p>
+      أن أبقى قريبًا من قلبكِ ما استطعت، صديقًا لكِ، حنونًا عليكِ، شريكًا لفرحكِ إذا أقبل، سندًا لكِ إذا مالت الأيام، ويدًا لا تفلت يدكِ إذا ضاقت الحياة واتّسع ثقلها.
+    </p>
+    <p>
+      أعاهدكِ أن أحبّكِ كما أحببتكِ في تلك النظرة الأولى: بدهشةٍ لا تشيخ، وبرغبةٍ صادقة، وبقلبٍ يعرف يقينًا أنّ بعض الناس لا يدخلون حياتنا مصادفة، بل يدخلونها ليصبحوا الحياة نفسها.
+    </p>
+  </div>
+
+  <!-- Closing -->
+  <div class="closing">
+    <div class="closing-lines">
+      يا <span class="r-name">رودينا</span>،<br>
+      يا صاحبة العينين اللتين قالتا، في لحظةٍ واحدة،<br>
+      ما عجزت الكلمات عن قوله في زمنٍ كامل:<br><br>
+      أهلًا بكِ في قلبي،<br>
+      أهلًا بكِ في عمري،<br>
+      أهلًا بكِ في أيامي كلّها،<br>
+      وفي دعائي، وطمأنينتي، وفي المعنى الأجمل من أيّامي.
+    </div>
+
+    <div class="closing-divider"></div>
+
+    <p style="font-family:'Amiri',serif; font-size:1.08rem; color:var(--text-body); line-height:2.2; margin-bottom:28px;">
+      فأنتِ لستِ أنثى أحببتُها فحسب، أنتِ الأنثى التي، حين رأيتها، شعرتُ أنّ قلبي بلغ أخيرًا وجهته، ووصل، بعد طول ترحالٍ خفيّ، إلى موطنه.
+    </p>
+
+    <div class="fleuron">❦</div>
+
+    <p class="signature" style="margin-top:20px;">بكلّ الحبّ كتبت هذي العبارات،<br>زوجك</p>
+  </div>
+
+</article>
+
+<script>
+  // Generate stars
+  const container = document.getElementById('stars');
+  const count = 120;
+  for (let i = 0; i < count; i++) {
+    const s = document.createElement('span');
+    const size = Math.random() * 2.2 + .6;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      top:${Math.random()*100}%;
+      left:${Math.random()*100}%;
+      --d:${(Math.random()*4+2).toFixed(1)}s;
+      --op:${(Math.random()*.35+.1).toFixed(2)};
+      animation-delay:${(Math.random()*5).toFixed(1)}s;
+    `;
+    container.appendChild(s);
+  }
+
+  // Staggered paragraph reveal on scroll
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: .15 });
+
+  document.querySelectorAll('.body-text p, .pledge p').forEach((el, i) => {
+    el.style.cssText += `opacity:0; transform:translateY(18px); transition: opacity .7s ${i*.07}s ease, transform .7s ${i*.07}s ease;`;
+    observer.observe(el);
+  });
+</script>
+
+<!-- ══ MUSIC AUTOPLAY ══ -->
+<!-- ✏️ ضع رابط الموسيقى هنا ↓ -->
+<audio id="bgMusic" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+  const music = document.getElementById('bgMusic');
+  music.volume = 0;
+
+  // تشتغل بأول لمسة أو نقرة أو تمرير
+  function startMusic() {
+    music.play().then(() => {
+      // رفع الصوت تدريجياً
+      let v = 0;
+      const fade = setInterval(() => {
+        v = Math.min(v + 0.02, 0.5);
+        music.volume = v;
+        if (v >= 0.5) clearInterval(fade);
+      }, 80);
+    }).catch(() => {});
+    ['click','touchstart','scroll','keydown'].forEach(e =>
+      document.removeEventListener(e, startMusic)
+    );
+  }
+
+  ['click','touchstart','scroll','keydown'].forEach(e =>
+    document.addEventListener(e, startMusic, { once: true })
+  );
+</script>
+</body>
+</html>
