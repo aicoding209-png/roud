@@ -152,8 +152,10 @@
     .word-anim {
       display: inline-block;
       opacity: 0;
-      transform: translateY(10px);
-      animation: wordFadeIn 0.35s ease forwards var(--wd, 0ms);
+      transform: translateY(8px);
+    }
+    .word-anim.go {
+      animation: wordFadeIn 0.3s ease forwards var(--wd, 0ms);
     }
     @keyframes wordFadeIn {
       to { opacity: 1; transform: translateY(0); }
@@ -236,6 +238,10 @@ function animateSplashText() {
   titleEl.innerHTML =
     '<span class="word-anim" style="--wd:0ms">إلى</span> ' +
     '<span class="word-anim" style="--wd:220ms; color:#c0392b">رُدينا</span>';
+
+  titleEl.querySelectorAll('.word-anim').forEach(function(w) {
+    w.classList.add('go');
+  });
 
   var inner = document.getElementById('splash-inner');
   inner.style.transition = 'opacity 0.4s ease';
@@ -442,25 +448,76 @@ const LETTER_HTML = `
 `;
 
 function animateLetterHeader(card) {
-  // ── أنيميشن "إلى" كلمة واحدة ──
   var headerTo = card.querySelector('.header-to');
   headerTo.innerHTML = '<span class="word-anim" style="--wd:0ms">إلى</span>';
   headerTo.style.opacity = '1';
+  headerTo.querySelector('.word-anim').classList.add('go');
 
-  // ── أنيميشن "رُدينا" كلمة واحدة ──
   var headerName = card.querySelector('.header-name');
   headerName.innerHTML = '<span class="word-anim" style="--wd:280ms">رُدينا</span>';
   headerName.style.opacity = '1';
+  headerName.querySelector('.word-anim').classList.add('go');
 
-  // ── إخفاء باقي المحتوى ثم إظهاره بعد انتهاء الأنيميشن ──
   var rest = card.querySelectorAll('.dots, .opening-card, .welcome-card, .bridge-card, .body-text, .pledge, .closing, .fleuron');
   rest.forEach(function(el) {
     el.style.opacity = '0';
-    el.style.transition = 'opacity 0.9s ease';
+    el.style.transition = 'opacity 0.5s ease';
   });
   setTimeout(function() {
     rest.forEach(function(el) { el.style.opacity = '1'; });
-  }, 900);
+  }, 750);
+}
+
+// ── تغليف كلمات العنصر بـ spans ──
+function wrapWordsInElement(el) {
+  var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
+  var textNodes = [];
+  var node;
+  while ((node = walker.nextNode())) { textNodes.push(node); }
+
+  var idx = 0;
+  textNodes.forEach(function(tn) {
+    if (tn.textContent.trim() === '') return;
+    var parts = tn.textContent.split(/(\s+)/);
+    var frag = document.createDocumentFragment();
+    parts.forEach(function(part) {
+      if (/^\s+$/.test(part)) {
+        frag.appendChild(document.createTextNode(part));
+      } else if (part !== '') {
+        var s = document.createElement('span');
+        s.className = 'word-anim';
+        s.style.setProperty('--wd', (idx * 55) + 'ms');
+        s.textContent = part;
+        frag.appendChild(s);
+        idx++;
+      }
+    });
+    tn.parentNode.replaceChild(frag, tn);
+  });
+}
+
+// ── تطبيق أنيميشن الكلمات على كامل الرسالة ──
+function applyWordAnimation(card) {
+  var targets = card.querySelectorAll(
+    '.dedication-text, .welcome-text, .bridge-text, ' +
+    '.body-text p, .poem-block, .pledge-title, .pledge p, ' +
+    '.closing-lines, .signature'
+  );
+
+  targets.forEach(function(el) { wrapWordsInElement(el); });
+
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.word-anim').forEach(function(w) {
+          w.classList.add('go');
+        });
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  targets.forEach(function(el) { obs.observe(el); });
 }
 
 function openLetter() {
@@ -469,17 +526,9 @@ function openLetter() {
   card.innerHTML = LETTER_HTML;
   card.style.display = '';
 
-  // 2. أنيميشن العنوان حرفاً حرفاً
+  // 2. أنيميشن العنوان + كامل نص الرسالة كلمة كلمة
   animateLetterHeader(card);
-
-  // 3. تشغيل Scroll Reveal على العناصر المحقونة
-  const obs2 = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; } });
-  }, {threshold:.15});
-  card.querySelectorAll('.body-text p, .pledge p').forEach((el, i) => {
-    el.style.cssText += `opacity:0;transform:translateY(18px);transition:opacity .7s ${i*.07}s ease,transform .7s ${i*.07}s ease;`;
-    obs2.observe(el);
-  });
+  setTimeout(function() { applyWordAnimation(card); }, 800);
 
   // 3. إخفاء splash
   document.getElementById('pin-container').style.opacity = '0';
