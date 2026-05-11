@@ -654,6 +654,8 @@ function openLetter() {
   card.innerHTML = LETTER_HTML;
   card.style.display = '';
 
+  document.getElementById('bgMusic').play();
+
   // 2. أنيميشن العنوان + كامل نص الرسالة كلمة كلمة
   animateLetterHeader(card);
   setTimeout(function() { applyWordAnimation(card); }, 800);
@@ -675,5 +677,8 @@ function openLetter() {
   }, 900);
 }
 </script>
+
+      <audio id="bgMusic" src="music.mp3" loop></audio>
+
 </body>
 </html>
