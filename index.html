@@ -43,7 +43,7 @@
       transition: opacity 2s ease;
     }
     #bgLottie.visible { opacity: 1; }
-    #bgLottie svg { width: 100% !important; height: 100% !important; }
+    #bgLottie svg {     position: absolute !important;     top: 50% !important;     left: 50% !important;     transform: translate(-50%, -50%) !important;     min-width: 100% !important;     min-height: 100% !important;     width: auto !important;     height: auto !important; }
     /* ── Stars ── */
     .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
     .stars span {
@@ -209,7 +209,10 @@ function initBgSky() {
     renderer:   'svg',
     loop:       true,
     autoplay:   true,
-    path:       'Moon-night-Sky.json',
+   path: 'Moon-night-Sky.json',
+        rendererSettings: {
+            preserveAspectRatio: 'xMidYMid slice'
+        }
   });
   setTimeout(() => document.getElementById('bgLottie').classList.add('visible'), 100);
 }
