@@ -148,13 +148,16 @@
     .key.empty  { background:transparent; border:none; cursor:default; }
     .key.del    { font-size:1.2rem; color:#7a6340; }
 
-    /* ── Char Animation ── */
-    .char-anim {
+    /* ── Word Animation ── */
+    .word-anim {
       display: inline-block;
       opacity: 0;
-      animation: charFadeIn 0.2s ease forwards var(--cd, 0ms);
+      transform: translateY(10px);
+      animation: wordFadeIn 0.35s ease forwards var(--wd, 0ms);
     }
-    @keyframes charFadeIn { to { opacity: 1; } }
+    @keyframes wordFadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
@@ -227,21 +230,12 @@ function initBgSky() {
   }, 100);
 }
 
-// ── Animate splash text char by char ──
+// ── Animate splash text word by word ──
 function animateSplashText() {
   var titleEl = document.getElementById('splash-title');
-  var part1 = 'إلى ';
-  var part2 = 'رُدينا';
-  var html = '';
-  [...part1].forEach(function(ch, i) {
-    html += '<span class="char-anim" style="--cd:' + (i * 45) + 'ms">' + (ch === ' ' ? '&nbsp;' : ch) + '</span>';
-  });
-  html += '<span style="color:#c0392b">';
-  [...part2].forEach(function(ch, i) {
-    html += '<span class="char-anim" style="--cd:' + ((part1.length + i) * 45) + 'ms">' + ch + '</span>';
-  });
-  html += '</span>';
-  titleEl.innerHTML = html;
+  titleEl.innerHTML =
+    '<span class="word-anim" style="--wd:0ms">إلى</span> ' +
+    '<span class="word-anim" style="--wd:220ms; color:#c0392b">رُدينا</span>';
 
   var inner = document.getElementById('splash-inner');
   inner.style.transition = 'opacity 0.4s ease';
@@ -448,29 +442,17 @@ const LETTER_HTML = `
 `;
 
 function animateLetterHeader(card) {
-  // ── أنيميشن "إلى" ──
+  // ── أنيميشن "إلى" كلمة واحدة ──
   var headerTo = card.querySelector('.header-to');
-  var text1 = 'إلى';
-  var html1 = '';
-  [...text1].forEach(function(ch, i) {
-    html1 += '<span class="char-anim" style="--cd:' + (i * 60) + 'ms">' + ch + '</span>';
-  });
-  headerTo.innerHTML = html1;
+  headerTo.innerHTML = '<span class="word-anim" style="--wd:0ms">إلى</span>';
   headerTo.style.opacity = '1';
 
-  // ── أنيميشن "رُدينا" ──
+  // ── أنيميشن "رُدينا" كلمة واحدة ──
   var headerName = card.querySelector('.header-name');
-  var text2 = 'رُدينا';
-  var offset = text1.length * 60 + 200;
-  var html2 = '';
-  [...text2].forEach(function(ch, i) {
-    html2 += '<span class="char-anim" style="--cd:' + (offset + i * 80) + 'ms">' + ch + '</span>';
-  });
-  headerName.innerHTML = html2;
+  headerName.innerHTML = '<span class="word-anim" style="--wd:280ms">رُدينا</span>';
   headerName.style.opacity = '1';
 
   // ── إخفاء باقي المحتوى ثم إظهاره بعد انتهاء الأنيميشن ──
-  var totalDelay = offset + text2.length * 80 + 400;
   var rest = card.querySelectorAll('.dots, .opening-card, .welcome-card, .bridge-card, .body-text, .pledge, .closing, .fleuron');
   rest.forEach(function(el) {
     el.style.opacity = '0';
@@ -478,7 +460,7 @@ function animateLetterHeader(card) {
   });
   setTimeout(function() {
     rest.forEach(function(el) { el.style.opacity = '1'; });
-  }, totalDelay);
+  }, 900);
 }
 
 function openLetter() {
