@@ -30,8 +30,7 @@
       padding: 60px 20px 80px;
       position: relative; overflow-x: hidden;
     }
-    body::before { display: none; } /* الـ Lottie يحل محل الخلفية */
-
+    body::before { display: none; }
 
     /* ── Lottie Background ── */
     #bgLottie {
@@ -43,7 +42,17 @@
       transition: opacity 2s ease;
     }
     #bgLottie.visible { opacity: 1; }
-    #bgLottie svg {     position: absolute !important;     top: 50% !important;     left: 50% !important;     transform: translate(-50%, -50%) !important;     min-width: 100% !important;     min-height: 100% !important;     width: auto !important;     height: auto !important; }
+    #bgLottie svg {
+      position: absolute !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      min-width: 100% !important;
+      min-height: 100% !important;
+      width: auto !important;
+      height: auto !important;
+    }
+
     /* ── Stars ── */
     .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
     .stars span {
@@ -69,8 +78,6 @@
       height: var(--bf-size,70px);
       display: block;
     }
-
-    /* wobble = natural up/down while crossing */
     @keyframes bfFly {
       0%   { transform: translate(0, 0) scaleX(var(--sx,1)); opacity:0; }
       4%   { opacity: var(--bf-op, 0.82); }
@@ -90,7 +97,7 @@
       animation: fadeUp .9s ease both;
     }
     @keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
-    .corner { display:none; } /* حُذفت الزوايا مع البطاقة */
+    .corner { display:none; }
 
     /* ── Typography ── */
     .header-to { text-align:center; font-family:'Amiri',serif; font-style:italic; font-size:1.05rem; color:var(--gold-dim); letter-spacing:.08em; margin-bottom:6px; }
@@ -121,15 +128,10 @@
       .opening-card,.welcome-card,.bridge-card,.pledge{padding:20px 18px;}
     }
 
-      12%  { opacity: 0.92; }
-      60%  { opacity: 0.85; }
-      100% { transform: translate(var(--cxf,80px), var(--cyf,-80px)) scale(0.85); opacity:0; }
-    }
-
     /* ── SPLASH ── */
-    #splash { position:fixed; inset:0; background:#0d0a0f; z-index:9999; display:flex; align-items:center; justify-content:center; transition:opacity .8s ease; }
+    #splash { position:fixed; inset:0; background:transparent; z-index:9999; display:flex; align-items:center; justify-content:center; transition:opacity .8s ease; }
     #splash.hide { opacity:0; pointer-events:none; }
-    #splash-inner { text-align:center; animation:fadeUp .9s ease both; }
+    #splash-inner { text-align:center; opacity:0; }
     #splash-fleuron { font-size:2.2rem; color:#c9a96e; opacity:.7; margin-bottom:16px; animation:pulse 2s ease-in-out infinite; }
     @keyframes pulse { 0%,100%{transform:scale(1);opacity:.7;} 50%{transform:scale(1.15);opacity:1;} }
     #splash-title { font-family:'Amiri',serif; font-size:2.6rem; color:#e8d4a8; margin-bottom:10px; direction:rtl; }
@@ -145,6 +147,14 @@
     .key:active { transform:scale(.92); }
     .key.empty  { background:transparent; border:none; cursor:default; }
     .key.del    { font-size:1.2rem; color:#7a6340; }
+
+    /* ── Char Animation ── */
+    .char-anim {
+      display: inline-block;
+      opacity: 0;
+      animation: charFadeIn 0.2s ease forwards var(--cd, 0ms);
+    }
+    @keyframes charFadeIn { to { opacity: 1; } }
   </style>
 </head>
 <body>
@@ -154,7 +164,6 @@
 <div class="bf-container" id="bfContainer"></div>
 
 <article class="letter-card" id="letterCard" style="display:none"></article>
-
 
 <!-- SPLASH PIN -->
 <div id="splash">
@@ -188,7 +197,6 @@
 
 <script>
 // ── Lottie animation data ──
-// يتم تحميل بيانات الفراشة من ملف منفصل عبر fetch
 let LOTTIE_DATA = null;
 
 fetch('butterfly.json')
@@ -196,11 +204,10 @@ fetch('butterfly.json')
   .then(data => {
     LOTTIE_DATA = data;
     initStars();
+    initBgSky();
     // initButterflies تُستدعى فقط بعد إدخال الرمز الصحيح
   })
   .catch(err => console.error('خطأ في تحميل butterfly.json:', err));
-
-
 
 // ── Lottie Background Sky ──
 function initBgSky() {
@@ -209,121 +216,124 @@ function initBgSky() {
     renderer:   'svg',
     loop:       true,
     autoplay:   true,
-   path: 'Moon-night-Sky.json',
-        rendererSettings: {
-            preserveAspectRatio: 'xMidYMid slice'
-        }
+    path:       'Moon-night-Sky.json',
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice'
+    }
   });
-  setTimeout(() => document.getElementById('bgLottie').classList.add('visible'), 100);
+  setTimeout(() => {
+    document.getElementById('bgLottie').classList.add('visible');
+    setTimeout(animateSplashText, 1000);
+  }, 100);
+}
+
+// ── Animate splash text char by char ──
+function animateSplashText() {
+  var titleEl = document.getElementById('splash-title');
+  var part1 = 'إلى ';
+  var part2 = 'رُدينا';
+  var html = '';
+  [...part1].forEach(function(ch, i) {
+    html += '<span class="char-anim" style="--cd:' + (i * 45) + 'ms">' + (ch === ' ' ? '&nbsp;' : ch) + '</span>';
+  });
+  html += '<span style="color:#c0392b">';
+  [...part2].forEach(function(ch, i) {
+    html += '<span class="char-anim" style="--cd:' + ((part1.length + i) * 45) + 'ms">' + ch + '</span>';
+  });
+  html += '</span>';
+  titleEl.innerHTML = html;
+
+  var inner = document.getElementById('splash-inner');
+  inner.style.transition = 'opacity 0.4s ease';
+  inner.style.opacity = '1';
 }
 
 // ── Stars ──
 function initStars() {
-const sc = document.getElementById('stars');
-for (let i = 0; i < 120; i++) {
-  const s = document.createElement('span');
-  const sz = Math.random() * 2.2 + .6;
-  s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*4+2).toFixed(1)}s;--op:${(Math.random()*.35+.1).toFixed(2)};animation-delay:${(Math.random()*5).toFixed(1)}s;`;
-  sc.appendChild(s);
-}
+  const sc = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('span');
+    const sz = Math.random() * 2.2 + .6;
+    s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*4+2).toFixed(1)}s;--op:${(Math.random()*.35+.1).toFixed(2)};animation-delay:${(Math.random()*5).toFixed(1)}s;`;
+    sc.appendChild(s);
+  }
 }
 
 // ── Lottie Butterflies ──
 const container = document.getElementById('bfContainer');
 function initButterflies() {
-const BF_COUNT  = 7;
-// مصفوفة الفلاتر اللونية: أزرق (أصلي) / أحمر / وردي — مع الحفاظ على التدرجات الداخلية للفراشة
-const BF_FILTERS = [
-  'none',                                               // أزرق أصلي
-  'hue-rotate(130deg) saturate(1.4)',                   // أحمر
-  'hue-rotate(90deg) saturate(1.15) brightness(1.05)', // وردي
-  'hue-rotate(175deg) saturate(1.5) brightness(1.1)',  // أصفر
-  'none',                                               // أزرق أصلي
-  'hue-rotate(130deg) saturate(1.4)',                   // أحمر
-  'hue-rotate(90deg) saturate(1.15) brightness(1.05)', // وردي
-];
-const SIZES     = [38, 45, 35, 49, 42, 38, 45]; // تصغير 70% من الأحجام الأصلية [55, 65, 50, 70, 60, 55, 65]
+  const BF_COUNT  = 7;
+  const BF_FILTERS = [
+    'none',
+    'hue-rotate(130deg) saturate(1.4)',
+    'hue-rotate(90deg) saturate(1.15) brightness(1.05)',
+    'hue-rotate(175deg) saturate(1.5) brightness(1.1)',
+    'none',
+    'hue-rotate(130deg) saturate(1.4)',
+    'hue-rotate(90deg) saturate(1.15) brightness(1.05)',
+  ];
+  const SIZES = [38, 45, 35, 49, 42, 38, 45];
 
-function rand(min, max) { return Math.random() * (max - min) + min; }
+  function rand(min, max) { return Math.random() * (max - min) + min; }
 
-// ── تقسيم الشاشة إلى شرائح رأسية متساوية لضمان عدم تداخل الفراشات ──
-// كل فراشة تنطلق من شريحة مختلفة على الجانب الأيمن أو الأيسر
-(function spawnButterflies() {
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
+  (function spawnButterflies() {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const STRIP_H = vh / BF_COUNT;
+    const BASE_DURS = [16, 18, 14, 20, 17, 15, 19];
 
-  // تقسيم الارتفاع إلى BF_COUNT شرائح متساوية — فراشة واحدة لكل شريحة
-  const STRIP_H = vh / BF_COUNT;
+    for (let i = 0; i < BF_COUNT; i++) {
+      const wrap = document.createElement('div');
+      wrap.className = 'bf-wrap';
 
-  // نوزع التأخير على طول مجال الدورة لكل فراشة (لتبدأ في أوقات مختلفة)
-  const BASE_DURS = [16, 18, 14, 20, 17, 15, 19]; // مدة كل فراشة
+      const size = SIZES[i];
+      const dur  = BASE_DURS[i];
+      const fromRight = (i % 2 === 0);
+      const startX = fromRight ? vw - size - 10 : 10;
+      const stripMid  = (i + 0.5) * STRIP_H;
+      const jitter    = rand(-STRIP_H * 0.1, STRIP_H * 0.1);
+      const startYpx  = Math.min(Math.max(stripMid + jitter, size), vh - size);
+      const startYpct = (startYpx / vh) * 100;
+      const travelX = fromRight ? -rand(100, 170) : rand(100, 170);
+      const maxWobble = STRIP_H * 0.4;
+      const wobble    = () => rand(-maxWobble, maxWobble);
+      const delay   = (i / BF_COUNT) * dur;
+      const opacity = rand(0.72, 0.9);
 
-  for (let i = 0; i < BF_COUNT; i++) {
-    const wrap = document.createElement('div');
-    wrap.className = 'bf-wrap';
+      wrap.style.cssText = [
+        `left:${startX}px`,
+        `top:${startYpct.toFixed(1)}%`,
+        `--fly-dur:${dur}s`,
+        `--fly-delay:-${delay.toFixed(1)}s`,
+        `--bf-size:${size}px`,
+        `--bf-op:${opacity}`,
+        `--sx:${fromRight ? -1 : 1}`,
+        `--x25:${travelX * 0.25}px`,
+        `--y25:${wobble().toFixed(1)}px`,
+        `--x50:${travelX * 0.5}px`,
+        `--y50:${wobble().toFixed(1)}px`,
+        `--x75:${travelX * 0.75}px`,
+        `--y75:${wobble().toFixed(1)}px`,
+        `--xf:${travelX}px`,
+        `--yf:${wobble().toFixed(1)}px`,
+      ].join(';');
 
-    const size = SIZES[i];
-    const dur  = BASE_DURS[i];
+      const animDiv = document.createElement('div');
+      animDiv.className = 'bf-anim';
+      animDiv.style.cssText = `width:${size}px;height:${size}px;filter:${BF_FILTERS[i]};`;
+      wrap.appendChild(animDiv);
+      container.appendChild(wrap);
 
-    // Alternate sides — even = right edge, odd = left edge
-    const fromRight = (i % 2 === 0);
-
-    // موضع X: على الحافة المقابلة مع هامش ثابت
-    const startX = fromRight ? vw - size - 10 : 10;
-
-    // موضع Y: منتصف الشريحة الخاصة بهذه الفراشة ± 10% للطبيعية
-    const stripMid  = (i + 0.5) * STRIP_H;
-    const jitter    = rand(-STRIP_H * 0.1, STRIP_H * 0.1);
-    const startYpx  = Math.min(Math.max(stripMid + jitter, size), vh - size);
-    const startYpct = (startYpx / vh) * 100;
-
-    // مسافة الانتقال: تدخل الشاشة بمقدار كافٍ ثم تعود دون تداخل مع المناطق الأخرى
-    const travelX = fromRight ? -rand(100, 170) : rand(100, 170);
-    // الاهتزاز العمودي محدود داخل الشريحة (±40% من ارتفاع الشريحة)
-    const maxWobble = STRIP_H * 0.4;
-    const wobble    = () => rand(-maxWobble, maxWobble);
-
-    // التأخير: كل فراشة تبدأ في نقطة مختلفة من دورتها
-    const delay   = (i / BF_COUNT) * dur;
-    const opacity = rand(0.72, 0.9);
-
-    wrap.style.cssText = [
-      `left:${startX}px`,
-      `top:${startYpct.toFixed(1)}%`,
-      `--fly-dur:${dur}s`,
-      `--fly-delay:-${delay.toFixed(1)}s`, // تأخير سالب = تبدأ في منتصف الدورة مباشرة
-      `--bf-size:${size}px`,
-      `--bf-op:${opacity}`,
-      `--sx:${fromRight ? -1 : 1}`,
-      `--x25:${travelX * 0.25}px`,
-      `--y25:${wobble().toFixed(1)}px`,
-      `--x50:${travelX * 0.5}px`,
-      `--y50:${wobble().toFixed(1)}px`,
-      `--x75:${travelX * 0.75}px`,
-      `--y75:${wobble().toFixed(1)}px`,
-      `--xf:${travelX}px`,
-      `--yf:${wobble().toFixed(1)}px`,
-    ].join(';');
-
-    // Lottie div
-    const animDiv = document.createElement('div');
-    animDiv.className = 'bf-anim';
-    animDiv.style.cssText = `width:${size}px;height:${size}px;filter:${BF_FILTERS[i]};`;
-    wrap.appendChild(animDiv);
-    container.appendChild(wrap);
-
-    // Init Lottie
-    lottie.loadAnimation({
-      container: animDiv,
-      renderer: 'svg',
-      loop: true,
-      autoplay: true,
-      animationData: LOTTIE_DATA,
-    });
-  }
-})();
-
-} // end initButterflies
+      lottie.loadAnimation({
+        container: animDiv,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        animationData: LOTTIE_DATA,
+      });
+    }
+  })();
+}
 
 // ── PIN ──
 var entered = '', correct = '0909';
@@ -338,6 +348,7 @@ function checkCode() {
     setTimeout(function(){ entered=''; updateDots(); document.getElementById('error-msg').textContent=''; }, 1200);
   }
 }
+
 // ── محتوى الرسالة — لا يُحقن إلا بعد الرمز الصحيح ──
 const LETTER_HTML = `
   <div class="corner corner-tl"></div>
@@ -464,14 +475,9 @@ function openLetter() {
   s.classList.add('hide');
   setTimeout(function(){
     s.style.display = 'none';
-    // تشغيل الخلفية الليلية والفراشات بعد اختفاء splash
-    initBgSky();
     initButterflies();
   }, 900);
 }
-
-
-// scroll reveal يعمل داخل openLetter بعد حقن المحتوى
 </script>
 </body>
 </html>
