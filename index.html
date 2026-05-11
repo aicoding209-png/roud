@@ -356,8 +356,8 @@ const LETTER_HTML = `
   <div class="corner corner-bl"></div>
   <div class="corner corner-br"></div>
 
-  <p class="header-to">إلى</p>
-  <h1 class="header-name">رُدينا</h1>
+  <p class="header-to" style="opacity:0">إلى</p>
+  <h1 class="header-name" style="opacity:0">رُدينا</h1>
   <div class="dots">· · · · ·</div>
 
   <div class="opening-card">
@@ -447,13 +447,50 @@ const LETTER_HTML = `
   </div>
 `;
 
+function animateLetterHeader(card) {
+  // ── أنيميشن "إلى" ──
+  var headerTo = card.querySelector('.header-to');
+  var text1 = 'إلى';
+  var html1 = '';
+  [...text1].forEach(function(ch, i) {
+    html1 += '<span class="char-anim" style="--cd:' + (i * 60) + 'ms">' + ch + '</span>';
+  });
+  headerTo.innerHTML = html1;
+  headerTo.style.opacity = '1';
+
+  // ── أنيميشن "رُدينا" ──
+  var headerName = card.querySelector('.header-name');
+  var text2 = 'رُدينا';
+  var offset = text1.length * 60 + 200;
+  var html2 = '';
+  [...text2].forEach(function(ch, i) {
+    html2 += '<span class="char-anim" style="--cd:' + (offset + i * 80) + 'ms">' + ch + '</span>';
+  });
+  headerName.innerHTML = html2;
+  headerName.style.opacity = '1';
+
+  // ── إخفاء باقي المحتوى ثم إظهاره بعد انتهاء الأنيميشن ──
+  var totalDelay = offset + text2.length * 80 + 400;
+  var rest = card.querySelectorAll('.dots, .opening-card, .welcome-card, .bridge-card, .body-text, .pledge, .closing, .fleuron');
+  rest.forEach(function(el) {
+    el.style.opacity = '0';
+    el.style.transition = 'opacity 0.9s ease';
+  });
+  setTimeout(function() {
+    rest.forEach(function(el) { el.style.opacity = '1'; });
+  }, totalDelay);
+}
+
 function openLetter() {
   // 1. حقن المحتوى في الـ article
   const card = document.getElementById('letterCard');
   card.innerHTML = LETTER_HTML;
   card.style.display = '';
 
-  // 2. تشغيل Scroll Reveal على العناصر المحقونة
+  // 2. أنيميشن العنوان حرفاً حرفاً
+  animateLetterHeader(card);
+
+  // 3. تشغيل Scroll Reveal على العناصر المحقونة
   const obs2 = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; } });
   }, {threshold:.15});
