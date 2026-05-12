@@ -897,53 +897,46 @@ function wrapWordsInElement(el) {
 }
 
 function applyWordAnimation(card) {
-  var targets = card.querySelectorAll(
-    '.dedication-text, .welcome-text, .bridge-text, ' +
-    '.story-card p, ' +
-    '.body-text p, .poem-block, .pledge-title, .pledge p, ' +
-    '.closing-lines, .signature'
-  );
-  targets.forEach(function(el){ wrapWordsInElement(el); });
-  var obs = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting){
-        e.target.querySelectorAll('.word-anim').forEach(function(w){ w.classList.add('go'); });
-        obs.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.1 });
-  targets.forEach(function(el){ obs.observe(el); });
+  var paragraphs = card.querySelectorAll('.dedication-text, .welcome-text, .bridge-text, .story-card p, .body-text p, .pledge p, .closing-lines');
+
+  paragraphs.forEach(function(p, index) {
+    p.style.opacity = '0';
+    p.style.transition = 'opacity 0.6s ease';
+    
+    setTimeout(() => {
+      p.style.opacity = '1';
+    }, 300 + (index * 180)); // كل سطر/فقرة يظهر بعد الذي قبله
+  });
 }
 
 function openLetter() {
   var card = document.getElementById('letterCard');
+  
   card.innerHTML = LETTER_HTML;
-  card.style.opacity = '0';          // مخفي أولاً
-  card.style.transition = 'opacity 0.8s ease';
-  card.style.display = '';
-
-  document.getElementById('bgMusic').play();
-
-  // ── بدء تتبع الزيارة في Firebase ──
-  startVisitTracking();
-
-  animateLetterHeader(card);
-  setTimeout(function(){ applyWordAnimation(card); }, 800);
-
-  document.getElementById('pin-container').style.opacity  = '0';
-  document.getElementById('splash-hint').style.opacity    = '0';
-  document.getElementById('splash-fleuron').style.opacity = '0';
-  document.getElementById('splash-title').style.transition= 'opacity .4s';
-  setTimeout(function(){ document.getElementById('splash-title').style.opacity='0'; }, 200);
-
-  var s = document.getElementById('splash');
-  s.classList.add('hide');
-  setTimeout(function(){
-    s.style.display = 'none';
+  card.style.display = 'block';
+  card.style.opacity = '0';           // مخفي من البداية
+  card.style.transition = 'opacity 0.85s ease';
+  
+  // إخفاء السplash
+  document.getElementById('splash').classList.add('hide');
+  
+  setTimeout(() => {
+    document.getElementById('splash').style.display = 'none';
     initButterflies();
-    // تظهر الرسالة بتلاشي بعد اختفاء الـ splash
-    setTimeout(function(){ card.style.opacity = '1'; }, 100);
-  }, 900);
+    
+    // التعديل الحاسم: إجبار المتصفح على رسم الكارت قبل الإظهار
+    void card.offsetHeight;
+    
+    card.style.opacity = '1';
+    
+    setTimeout(() => {
+      animateLetterHeader(card);
+      applyWordAnimation(card);
+      document.getElementById('bgMusic').play();
+      startVisitTracking();
+    }, 100);
+    
+  }, 800);
 }
 </script>
 
