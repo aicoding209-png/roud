@@ -116,231 +116,319 @@
     .corner { display:none; }
 
     /* ── Typography ── */
-.header-to {
-  text-align:center;
-  font-family:'Amiri',serif;
-  font-style:italic;
-  font-size:1.05rem;
-  color:var(--gold-dim);
-  letter-spacing:.08em;
-  margin-bottom:6px;
-  opacity: 0;
-}
+    .header-to {
+      text-align:center;
+      font-family:'Amiri',serif;
+      font-style:italic;
+      font-size:1.05rem;
+      color:var(--gold-dim);
+      letter-spacing:.08em;
+      margin-bottom:6px;
+      opacity: 0;
+    }
 
-.header-name {
-  text-align:center;
-  font-family:'Amiri',serif;
-  font-size:4.5rem;
-  font-weight:700;
-  color:var(--red);
-  line-height:1.1;
-  text-shadow:0 0 30px rgba(192,57,43,0.7), 
-              0 0 50px rgba(192,57,43,0.4), 
-              0 4px 20px rgba(0,0,0,0.95);
-  margin-bottom:28px;
-  letter-spacing: 0.08em;
-  opacity: 0;
-}
+    .header-name {
+      text-align:center;
+      font-family:'Amiri',serif;
+      font-size:4.5rem;
+      font-weight:700;
+      color:var(--red);
+      line-height:1.1;
+      text-shadow:0 0 30px rgba(192,57,43,0.7), 
+                  0 0 50px rgba(192,57,43,0.4), 
+                  0 4px 20px rgba(0,0,0,0.95);
+      margin-bottom:28px;
+      letter-spacing: 0.08em;
+      opacity: 0;
+    }
 
-.handwriting {
-  display: inline-block;
-  opacity: 0;
-  animation: zoomFromFar 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
+    /* ── تأثير الزووم من بعيد ── */
+    .handwriting {
+      display: inline-block;
+      opacity: 0;
+      animation: zoomFromFar 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
 
-@keyframes zoomFromFar {
-  0% {
-    opacity: 0;
-    transform: scale(0.05) translateY(40px);
-    filter: blur(8px);
-  }
-  40% {
-    opacity: 0.6;
-    filter: blur(3px);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-    filter: blur(0);
-  }
-}
+    @keyframes zoomFromFar {
+      0% {
+        opacity: 0;
+        transform: scale(0.05) translateY(40px);
+        filter: blur(8px);
+      }
+      40% {
+        opacity: 0.6;
+        filter: blur(3px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: blur(0);
+      }
+    }
 
-/* خط تحت الحرف يظهر تدريجياً */
-.write::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background: linear-gradient(to right, transparent, #c0392b, transparent);
-  animation: underlineDraw 1.6s ease forwards;
-  animation-delay: 0.6s;
-}
+    /* ── خط تحت الاسم يظهر تدريجياً ── */
+    .write::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(to right, transparent, #c0392b, transparent);
+      animation: underlineDraw 1.6s ease forwards;
+      animation-delay: 0.6s;
+    }
 
-@keyframes underlineDraw {
-  from { transform: scaleX(0); transform-origin: right; }
-  to   { transform: scaleX(1); transform-origin: right; }
-}
+    @keyframes underlineDraw {
+      from { transform: scaleX(0); transform-origin: right; }
+      to   { transform: scaleX(1); transform-origin: right; }
+    }
 
-
-    
     .fleuron { text-align:center; font-size:1.4rem; color:var(--gold); opacity:.7; margin-bottom:28px; }
-    .dots { text-align:center; letter-spacing:.5em; color:var(--gold-dim); font-size:.7rem; margin:26px 0; }
 
-    
-  /* الإهداء */
-.opening-card {
-  margin-bottom: 0;
-  padding: 32px 28px;
-  border: none;
-  background: transparent;
-  position: relative;
-  text-align: center;
-}
-.opening-card::before, .opening-card::after {
-  content: '❧';
-  display: block;
-  text-align: center;
-  font-size: 1.3rem;
-  color: var(--red);
-  opacity: .5;
-  margin-bottom: 14px;
-}
-.opening-card::after { margin-bottom: 0; margin-top: 14px; }
-    
-.dedication-text {
-  font-family: 'Amiri', serif;
-  font-size: 1.15rem;
-  line-height: 2.6;
-  color: #4ade80;
-  text-shadow: 0 0 12px rgba(74, 222, 128, 0.6),
-               0 0 28px rgba(74, 222, 128, 0.3);
-  text-align: center;
-  border: none;
-  padding: 0;
-  margin-bottom: 0;
-  font-style: italic;
-}
+    /* ── فاصل ذهبي متحرك ── */
+    .dots {
+      text-align: center;
+      margin: 32px 0;
+      position: relative;
+      height: 20px;
+      overflow: visible;
+    }
+    .dots::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scaleX(0);
+      width: 200px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+      transition: transform 1.2s ease;
+    }
+    .dots.visible::before {
+      transform: translate(-50%, -50%) scaleX(1);
+    }
+    .dots-inner {
+      position: relative;
+      z-index: 1;
+      display: inline-block;
+      background: var(--bg-deep);
+      padding: 0 14px;
+      font-size: .75rem;
+      letter-spacing: .5em;
+      color: var(--gold);
+      opacity: .8;
+    }
 
-/* الترحيب */
-.welcome-card {
-  padding: 30px 32px;
-  border-radius: 4px;
-  border: 1px solid rgba(192,57,43,.2);
-  border-bottom: 3px solid var(--red);
-  background: rgba(192,57,43,.04);
-  backdrop-filter: blur(6px);
-}
-.welcome-text {
-  font-family: 'Amiri', serif;
-  font-size: 1.06rem;
-  line-height: 2.4;
-  color: #e8d8d8;
-  text-align: center;
-}
+    /* ── الإهداء ── */
+    .opening-card {
+      margin-bottom: 0;
+      padding: 32px 28px;
+      border: none;
+      background: transparent;
+      position: relative;
+      text-align: center;
+    }
+    .opening-card::before, .opening-card::after {
+      content: '❧';
+      display: block;
+      text-align: center;
+      font-size: 1.3rem;
+      color: var(--red);
+      opacity: .5;
+      margin-bottom: 14px;
+    }
+    .opening-card::after { margin-bottom: 0; margin-top: 14px; }
 
-    /* الحكاية الصامتة */
-.bridge-card {
-  padding: 30px 32px;
-  border-radius: 4px;
-  border: 1px solid rgba(148,61,106,.2);
-  border-inline-end: 3px solid #943d6a;
-  background: rgba(148,61,106,.06);
-  backdrop-filter: blur(6px);
-  position: relative;
-}
-.bridge-card::before {
-  content: '"';
-  position: absolute;
-  top: 10px;
-  right: 16px;
-  font-family: 'Amiri', serif;
-  font-size: 4rem;
-  color: #943d6a;
-  opacity: .15;
-  line-height: 1;
-}
-.bridge-text {
-  font-family: 'Amiri', serif;
-  font-size: 1.03rem;
-  line-height: 2.4;
-  color: #d98aad;
-  text-align: justify;
-}
-    
-    
-    
-    .body-text p { 
-  font-family: 'Amiri', serif;
-  font-size:1.05rem; 
-  line-height:2.2; 
-  color:var(--text-body); 
-  margin-bottom:24px; 
-  text-align:justify; 
-  text-shadow: 0 1px 8px rgba(0,0,0,.9); 
-}
-    .r-name { color:var(--red); font-weight:700; text-shadow:0 0 14px rgba(192,57,43,.35); }
-    .poem-block { border-inline-start:3px solid var(--gold-dim); padding:18px 24px 18px 16px; margin:28px 0; background:rgba(201,169,110,.03); border-radius:2px; font-family:'Amiri',serif; font-style:italic; font-size:1.08rem; line-height:2.6; color:var(--gold-light); text-align:center; }
+    .dedication-text {
+      font-family: 'Amiri', serif;
+      font-size: 1.15rem;
+      line-height: 2.6;
+      color: #4ade80;
+      text-shadow: 0 0 12px rgba(74, 222, 128, 0.6),
+                   0 0 28px rgba(74, 222, 128, 0.3);
+      text-align: center;
+      border: none;
+      padding: 0;
+      margin-bottom: 0;
+      font-style: italic;
+    }
 
-    
-.pledge {
-  margin: 40px 0 32px;
-  padding: 40px 36px 36px;
-  border: 1px solid rgba(201,169,110,.35);
-  border-top: 3px solid var(--gold);
-  border-radius: 4px;
-  background: linear-gradient(160deg, rgba(201,169,110,.07) 0%, rgba(0,0,0,.5) 60%);
-  backdrop-filter: blur(8px);
-  position: relative;
-  box-shadow: 0 0 40px rgba(201,169,110,.06), inset 0 1px 0 rgba(201,169,110,.1);
-}
-.pledge::before {
-  content: '❦';
-  position: absolute;
-  top: -18px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--bg-deep);
-  padding: 0 14px;
-  font-size: 1.5rem;
-  color: var(--gold);
-  opacity: .85;
-}
-.pledge-title {
-  font-family: 'Amiri', serif;
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: var(--gold);
-  margin-bottom: 22px;
-  text-align: center;
-  letter-spacing: .04em;
-  text-shadow: 0 0 20px rgba(201,169,110,.3);
-}
-.pledge p {
-  font-size: 1.06rem;
-  line-height: 2.4;
-  color: var(--gold-light);
-  margin-bottom: 18px;
-  text-align: justify;
-  border-bottom: 1px solid rgba(201,169,110,.08);
-  padding-bottom: 18px;
-  font-family: 'Amiri', serif;
-}
-.pledge p:last-child {
-  margin-bottom: 0;
-  border-bottom: none;
-  padding-bottom: 0;
-}
+    /* ── الترحيب ── */
+    .welcome-card {
+      padding: 30px 32px;
+      border-radius: 4px;
+      border: 1px solid rgba(192,57,43,.2);
+      border-bottom: 3px solid var(--red);
+      background: rgba(192,57,43,.04);
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .welcome-card.reveal {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .welcome-text {
+      font-family: 'Amiri', serif;
+      font-size: 1.06rem;
+      line-height: 2.4;
+      color: #e8d8d8;
+      text-align: center;
+    }
 
-    
+    /* ── الحكاية الصامتة ── */
+    .bridge-card {
+      padding: 30px 32px;
+      border-radius: 4px;
+      border: 1px solid rgba(148,61,106,.2);
+      border-inline-end: 3px solid #943d6a;
+      background: rgba(148,61,106,.06);
+      backdrop-filter: blur(6px);
+      position: relative;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .bridge-card.reveal {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .bridge-card::before {
+      content: '"';
+      position: absolute;
+      top: 10px;
+      right: 16px;
+      font-family: 'Amiri', serif;
+      font-size: 4rem;
+      color: #943d6a;
+      opacity: .15;
+      line-height: 1;
+    }
+    .bridge-text {
+      font-family: 'Amiri', serif;
+      font-size: 1.03rem;
+      line-height: 2.4;
+      color: #d98aad;
+      text-align: justify;
+    }
+
+    /* ── نص الجسد ── */
+    .body-text p {
+      font-family: 'Amiri', serif;
+      font-size:1.05rem;
+      line-height:2.2;
+      color:var(--text-body);
+      margin-bottom:24px;
+      text-align:justify;
+      text-shadow: 0 1px 8px rgba(0,0,0,.9);
+    }
+
+    /* ── اسم رُدينا المتوهج ── */
+    .r-name {
+      color: var(--red);
+      font-weight: 700;
+      text-shadow: 0 0 14px rgba(192,57,43,.35);
+      transition: text-shadow 0.3s ease, color 0.3s ease;
+      cursor: default;
+    }
+    .r-name:hover {
+      text-shadow:
+        0 0 8px rgba(192,57,43,1),
+        0 0 20px rgba(192,57,43,0.8),
+        0 0 40px rgba(192,57,43,0.5);
+      color: #e85555;
+    }
+    /* توهج عند الظهور لأول مرة */
+    .r-name.glow-flash {
+      animation: nameFlash 1.2s ease forwards;
+    }
+    @keyframes nameFlash {
+      0%   { text-shadow: 0 0 14px rgba(192,57,43,.35); }
+      30%  { text-shadow: 0 0 8px rgba(192,57,43,1), 0 0 30px rgba(192,57,43,0.9), 0 0 60px rgba(192,57,43,0.6); color: #ff6b6b; }
+      100% { text-shadow: 0 0 14px rgba(192,57,43,.35); color: var(--red); }
+    }
+
+    .poem-block {
+      border-inline-start:3px solid var(--gold-dim);
+      padding:18px 24px 18px 16px;
+      margin:28px 0;
+      background:rgba(201,169,110,.03);
+      border-radius:2px;
+      font-family:'Amiri',serif;
+      font-style:italic;
+      font-size:1.08rem;
+      line-height:2.6;
+      color:var(--gold-light);
+      text-align:center;
+    }
+
+    /* ── العهد ── */
+    .pledge {
+      margin: 40px 0 32px;
+      padding: 40px 36px 36px;
+      border: 1px solid rgba(201,169,110,.35);
+      border-top: 3px solid var(--gold);
+      border-radius: 4px;
+      background: linear-gradient(160deg, rgba(201,169,110,.07) 0%, rgba(0,0,0,.5) 60%);
+      backdrop-filter: blur(8px);
+      position: relative;
+      box-shadow: 0 0 40px rgba(201,169,110,.06), inset 0 1px 0 rgba(201,169,110,.1);
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .pledge.reveal {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .pledge::before {
+      content: '❦';
+      position: absolute;
+      top: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-deep);
+      padding: 0 14px;
+      font-size: 1.5rem;
+      color: var(--gold);
+      opacity: .85;
+    }
+    .pledge-title {
+      font-family: 'Amiri', serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 22px;
+      text-align: center;
+      letter-spacing: .04em;
+      text-shadow: 0 0 20px rgba(201,169,110,.3);
+    }
+    .pledge p {
+      font-size: 1.06rem;
+      line-height: 2.4;
+      color: var(--gold-light);
+      margin-bottom: 18px;
+      text-align: justify;
+      border-bottom: 1px solid rgba(201,169,110,.08);
+      padding-bottom: 18px;
+      font-family: 'Amiri', serif;
+    }
+    .pledge p:last-child {
+      margin-bottom: 0;
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
     .closing { text-align:center; margin-top:44px; }
     .closing-lines { font-family:'Amiri',serif; font-size:1.12rem; line-height:2.7; color:var(--gold-light); margin-bottom:28px; }
     .closing-divider { width:120px; height:1px; background:linear-gradient(90deg,transparent,var(--gold-dim),transparent); margin:0 auto 26px; }
     .signature { font-family:'Amiri',serif; font-style:italic; font-size:1rem; color:var(--gold-dim); line-height:2; }
+
     @media(max-width:560px){
       .letter-card{padding:40px 24px 50px;}
-      .header-name{font-size:2.3rem;}
+      .header-name{font-size:2.8rem;}
       .body-text p{font-size:.97rem;}
       .opening-card,.welcome-card,.bridge-card,.pledge{padding:20px 18px;}
     }
@@ -357,6 +445,13 @@
       border-radius: 6px;
       padding: 26px 28px;
       backdrop-filter: blur(6px);
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .story-card.reveal {
+      opacity: 1;
+      transform: translateY(0);
     }
     .story-card p {
       font-family: 'Amiri', serif;
@@ -395,11 +490,41 @@
     .story-card--green p { color: var(--green-text); }
     .story-label--green { color: var(--green); }
 
+    /* ── مؤشر التقدم الجانبي الذهبي ── */
+    #progress-bar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 3px;
+      height: 0%;
+      background: linear-gradient(to bottom, var(--gold-dim), var(--gold), var(--gold-light));
+      z-index: 100;
+      transition: height 0.1s ease;
+      box-shadow: 0 0 8px rgba(201,169,110,0.5);
+      border-radius: 0 0 2px 2px;
+    }
+    #progress-bar::after {
+      content: '❦';
+      position: absolute;
+      bottom: -12px;
+      right: -7px;
+      font-size: .9rem;
+      color: var(--gold);
+      text-shadow: 0 0 8px rgba(201,169,110,0.8);
+    }
+
     /* ── SPLASH ── */
-    #splash { position:fixed; inset:0; background:transparent; z-index:9999; display:flex; align-items:center; justify-content:center; transition:opacity .8s ease; }
+    #splash {
+      position:fixed; inset:0; background:transparent; z-index:9999;
+      display:flex; align-items:center; justify-content:center;
+      transition:opacity .8s ease;
+    }
     #splash.hide { opacity:0; pointer-events:none; }
     #splash-inner { text-align:center; opacity:0; }
-    #splash-fleuron { font-size:2.2rem; color:#c9a96e; opacity:.7; margin-bottom:16px; animation:pulse 2s ease-in-out infinite; }
+    #splash-fleuron {
+      font-size:2.2rem; color:#c9a96e; opacity:.7; margin-bottom:16px;
+      animation:pulse 2s ease-in-out infinite;
+    }
     @keyframes pulse { 0%,100%{transform:scale(1);opacity:.7;} 50%{transform:scale(1.15);opacity:1;} }
     #splash-title { font-family:'Amiri',serif; font-size:2.6rem; color:#e8d4a8; margin-bottom:10px; direction:rtl; }
     #splash-hint { font-family:'Noto Naskh Arabic',serif; font-size:.95rem; color:#7a6340; margin-bottom:28px; direction:rtl; }
@@ -409,7 +534,12 @@
     .dot.error  { background:#c0392b; border-color:#c0392b; }
     #error-msg { font-family:'Noto Naskh Arabic',serif; font-size:.85rem; color:#c0392b; height:20px; margin-bottom:14px; direction:rtl; }
     #keypad { display:grid; grid-template-columns:repeat(3,70px); gap:12px; justify-content:center; direction:ltr; }
-    .key { width:70px; height:70px; border-radius:50%; background:rgba(201,169,110,.07); border:1.5px solid #3a2e1e; color:#c9a96e; font-family:'Amiri',serif; font-size:1.6rem; cursor:pointer; transition:background .15s,border-color .15s,transform .1s; }
+    .key {
+      width:70px; height:70px; border-radius:50%;
+      background:rgba(201,169,110,.07); border:1.5px solid #3a2e1e;
+      color:#c9a96e; font-family:'Amiri',serif; font-size:1.6rem;
+      cursor:pointer; transition:background .15s,border-color .15s,transform .1s;
+    }
     .key:hover  { background:rgba(201,169,110,.15); border-color:#7a6340; }
     .key:active { transform:scale(.92); }
     .key.empty  { background:transparent; border:none; cursor:default; }
@@ -427,8 +557,6 @@
     @keyframes wordFadeIn {
       to { opacity: 1; transform: translateY(0); }
     }
-
-    
   </style>
 </head>
 <body>
@@ -436,6 +564,9 @@
 <div class="stars" id="stars"></div>
 <div id="bgLottie"></div>
 <div class="bf-container" id="bfContainer"></div>
+
+<!-- مؤشر التقدم الجانبي -->
+<div id="progress-bar"></div>
 
 <article class="letter-card" id="letterCard" style="display:none; opacity:0"></article>
 
@@ -654,7 +785,6 @@ function initStars() {
 // ── Lottie Butterflies ──
 var container = document.getElementById('bfContainer');
 
-  
 function initButterflies() {
   var BF_COUNT   = 6;
   var BF_FILTERS = [
@@ -756,7 +886,8 @@ var LETTER_HTML = `
 
   <p class="header-to" style="opacity:0">إلى</p>
   <h1 class="header-name" style="opacity:0">رُدينا</h1>
-  <div class="dots">· · · · ·</div>
+
+  <div class="dots"><span class="dots-inner">· · · · ·</span></div>
 
   <div class="opening-card">
     <p class="dedication-text">
@@ -765,7 +896,7 @@ var LETTER_HTML = `
     </p>
   </div>
 
-  <div class="dots">· · · · ·</div>
+  <div class="dots"><span class="dots-inner">· · · · ·</span></div>
 
   <div class="welcome-card">
     <p class="welcome-text">
@@ -773,7 +904,7 @@ var LETTER_HTML = `
     </p>
   </div>
 
-  <div class="dots">· · ·</div>
+  <div class="dots"><span class="dots-inner">· · ·</span></div>
 
   <div class="bridge-card">
     <p class="bridge-text">
@@ -781,7 +912,7 @@ var LETTER_HTML = `
     </p>
   </div>
 
-  <div class="dots">· · ·</div>
+  <div class="dots"><span class="dots-inner">· · ·</span></div>
 
   <div class="story-label story-label--rose">❧&ensp;حين سمعتُ اسمكِ&ensp;❧</div>
   <div class="story-card story-card--rose">
@@ -810,7 +941,8 @@ var LETTER_HTML = `
       <span class="r-name">رُدينا</span>... خمسةُ حروف، لكنّها تَسعُ عمري كلَّه.
     </p>
   </div>
-  <div class="dots">· · ·</div>
+
+  <div class="dots"><span class="dots-inner">· · ·</span></div>
 
   <div class="story-label story-label--blue">❧&ensp;حين رأيتُكِ&ensp;❧</div>
   <div class="story-card story-card--blue">
@@ -854,7 +986,7 @@ var LETTER_HTML = `
     </p>
   </div>
 
-  <div class="dots">· · ·</div>
+  <div class="dots"><span class="dots-inner">· · ·</span></div>
 
   <div class="story-label story-label--green">❧&ensp;حين سمعتُ صوتكِ&ensp;❧</div>
   <div class="story-card story-card--green">
@@ -862,30 +994,29 @@ var LETTER_HTML = `
       وإن كان الاسمُ قد سكنَ القلبَ، فالصوتُ قد استوطن الروحَ كلَّها. ذلك اليومُ الذي سمعتُ فيه صوتَكِ كانَ يومَ السبت، السادسَ من أبريل — ذلك اليومُ الذي لا يعرفُ هو كم يَعني لي، ولا يدري أنّي أُحبُّه بقدرِ ما أُحبُّ كلَّ ما منحَني إيّاه. يومُ السبت هو اليومُ ذاتُه الذي رأيتُكِ فيه لأوّلِ مرّة، وسمعتُ فيه صوتَكِ لأوّلِ مرّة. يومٌ واحد احتملَ كلَّ هذا الجمال، فكيفَ لا أُحبَّه؟
     </p>
     <p>
-      كنتِ تتحدّثينَ مع أمّي، فطلبتُ منها بإشارةٍأن ترفعَ الصوت. وفي تلك الثانيةِ التي سبقَتْ أن تنطقي، كانت الدنيا كلُّها صامتةً كأنّها تعرفُ أنّ شيئًا نادرًا على وشكِ الحدوث.
+      كنتِ تتحدّثينَ مع أمّي، فطلبتُ منها بإشارةٍ أن ترفعَ الصوت. وفي تلك الثانيةِ التي سبقَتْ أن تنطقي، كانت الدنيا كلُّها صامتةً كأنّها تعرفُ أنّ شيئًا نادرًا على وشكِ الحدوث.
     </p>
     <p>
-      ثمّ تكلّمتِ. فعّم الصمت داخلي وتبسمت وحبست انفاسي حتى استشعرَ ذلك الصوت... صوتكِ لم تترجمه أذني كـ موجاتٍ صوتيةً تُسمَع، بل أمواج بحريةٌ باردةٌ مرّت من أذني ونزلت على قلبي، فأخمدتْ حرائقه كلّها. كان صوتكِ يشبه أشياءَ كثيرةً: كمثل نوتةً موسيقيةً تاهت من عصورٍ بعيدة ثم وجدت مأواها في أذني، وكصوتَ الرياحِ وهي تتسلّل من شباكِ بيتٍ صغيرٍ في غابة، تحتَ جوٍّ ممطر، فتحرّكُ الستائرَ برفق، وتوقظُ في القلبِ شوقًا لا يعرفُ النسيان. كأنّ البراءةَ لم تُفارقْه يومًا، هادئٌ كأنّه يخشى أن يُزعجَ الهواءَ من حوله. لم يكن صوتًا عاديًّا، ، وقفتُ لا بجسدي فحسب، بل بكلِّ ما فيّ وأنا أسمعُك بحب وأتمنّى ألّا تنتهين. وخطرَ ببالي في تلك اللحظةِ تمنٍّ واحد، بسيطٌ وصعب أيضًا: أن أسمعَ اسمي بذلك الصوت. أن تنطقَ لسانُكِ حروفَه كما تنطقُ بكلِّ شيء ، بنعومةٍ تُشبهُكِ، وهدوءٍ يسكنُ القلبَ قبلَ أن يصلَ الأذن.
+      ثمّ تكلّمتِ. فعّم الصمت داخلي وتبسمت وحبست أنفاسي حتى استشعرَ ذلك الصوت... صوتكِ لم تترجمه أذني كـ موجاتٍ صوتيةً تُسمَع، بل أمواج بحريةٌ باردةٌ مرّت من أذني ونزلت على قلبي، فأخمدتْ حرائقه كلّها. كان صوتكِ يشبه أشياءَ كثيرةً: كمثل نوتةً موسيقيةً تاهت من عصورٍ بعيدة ثم وجدت مأواها في أذني، وكصوتَ الرياحِ وهي تتسلّل من شباكِ بيتٍ صغيرٍ في غابة، تحتَ جوٍّ ممطر، فتحرّكُ الستائرَ برفق، وتوقظُ في القلبِ شوقًا لا يعرفُ النسيان. كأنّ البراءةَ لم تُفارقْه يومًا، هادئٌ كأنّه يخشى أن يُزعجَ الهواءَ من حوله. لم يكن صوتًا عاديًّا، وقفتُ لا بجسدي فحسب، بل بكلِّ ما فيّ وأنا أسمعُكِ بحب وأتمنّى ألّا تنتهين. وخطرَ ببالي في تلك اللحظةِ تمنٍّ واحد، بسيطٌ وصعب أيضًا: أن أسمعَ اسمي بذلك الصوت. أن تنطقَ لسانُكِ حروفَه كما تنطقُ بكلِّ شيء، بنعومةٍ تُشبهُكِ، وهدوءٍ يسكنُ القلبَ قبلَ أن يصلَ الأذن.
     </p>
   </div>
 
-  <div class="dots">· · ·</div>
-<div class="body-text">
-  <p>وفي حكايتنا الصامتة يا حبيبتي، تختبئ أمورٌ خفيّة وصامتة ايضاً لا يعلمها أحدٌ من البشر، ولا أدري ما الذي كان يدفعني إليها.</p>
-  
-  <p>كنتُ كلما قصدتُ تلكَ المدينةَ، انحرفتُ خفيةً نحو دارِكم، كأنَّ قلبي يُساقُ إليها سوقًا، فأجدُ في القُربِ ما لا يُقال، وأذوقُ من الحنينِ ما لا يُحتمل، حتى عشتُ معنى قولِ قيسٍ:</p>
-  
-  <div class="poem-block">
-    أمرُّ على الديارِ ديارِ ليلى<br>
-    أُقبِّلُ ذا الجدارَ وذا الجدارا<br><br>
-    وما حبُّ الديارِ شغفنَ قلبي<br>
-    ولكن حبُّ من سكنَ الديارا
-  </div>
-</div>
+  <div class="dots"><span class="dots-inner">· · ·</span></div>
+
+  <div class="body-text">
+    <p>وفي حكايتنا الصامتة يا حبيبتي، تختبئ أمورٌ خفيّة وصامتة أيضاً لا يعلمها أحدٌ من البشر، ولا أدري ما الذي كان يدفعني إليها.</p>
+    <p>كنتُ كلما قصدتُ تلكَ المدينةَ، انحرفتُ خفيةً نحو دارِكم، كأنَّ قلبي يُساقُ إليها سوقًا، فأجدُ في القُربِ ما لا يُقال، وأذوقُ من الحنينِ ما لا يُحتمل، حتى عشتُ معنى قولِ قيسٍ:</p>
+    <div class="poem-block">
+      أمرُّ على الديارِ ديارِ ليلى<br>
+      أُقبِّلُ ذا الجدارَ وذا الجدارا<br><br>
+      وما حبُّ الديارِ شغفنَ قلبي<br>
+      ولكن حبُّ من سكنَ الديارا
+    </div>
     <p>أنتِ لم تكوني مجرّد أنثى رأيتها، ولا مشهدًا جميلًا مرّ أمامي ثم مضى. أنتِ كنتِ اللحظة التي تغيّر بعدها ترتيب العالم في داخلي، ليصبح للحبّ معنى أصدق، وللانتظار معنى أعمق، وللدعاء معنى أعظم.</p>
     <p>واليوم، وقد صرتِ زوجتي، أشعر أنّ الله لم يرزقني زوجة فحسب، بل رزقني سكنًا، ومودّةً، ورحمةً، وقلبًا أودّ لو أقضي بقربه العمر كلّه، ممتنًّا لهذه النعمة في كل يوم.</p>
   </div>
-  <div class="dots">· · ·</div>
+
+  <div class="dots"><span class="dots-inner">· · ·</span></div>
 
   <div class="pledge">
     <div class="pledge-title">أعاهدكِ يا <span class="r-name">رُدينا</span>، يا زوجتي وحبيبتي،</div>
@@ -898,7 +1029,7 @@ var LETTER_HTML = `
       فأنتِ لستِ أنثى أحببتُها فحسب، أنتِ الأنثى التي، حين رأيتها، شعرتُ أنّ قلبي بلغ أخيرًا وجهته، ووصل، بعد طول ترحالٍ خفيّ، إلى موطنه.
     </p>
     <div class="closing-lines">
-       <span class="r-name">رُدينا</span>،<br>
+      <span class="r-name">رُدينا</span>،<br>
       يا صاحبة العينين اللتين فعلتا، في لحظةٍ واحدة،<br>
       ما عجزت الكلمات عن فعله في زمنٍ كامل:<br><br>
       أهلًا بكِ في قلبي،<br>
@@ -919,11 +1050,12 @@ var LETTER_HTML = `
   </div>
 `;
 
+// ── تأثير العنوان ──
 function animateLetterHeader(card) {
   var headerTo   = card.querySelector('.header-to');
   var headerName = card.querySelector('.header-name');
 
-  headerTo.style.opacity  = '0';
+  headerTo.style.opacity   = '0';
   headerName.style.opacity = '0';
 
   // "إلى" تظهر أولاً بتلاشٍ بسيط
@@ -940,32 +1072,73 @@ function animateLetterHeader(card) {
   }, 1100);
 }
 
-function wrapWordsInElement(el) {
-  var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
-  var textNodes = [];
-  var node;
-  while((node = walker.nextNode())){ textNodes.push(node); }
-  var idx = 0;
-  textNodes.forEach(function(tn){
-    if(tn.textContent.trim()==='') return;
-    var parts = tn.textContent.split(/(\s+)/);
-    var frag  = document.createDocumentFragment();
-    parts.forEach(function(part){
-      if(/^\s+$/.test(part)){
-        frag.appendChild(document.createTextNode(part));
-      } else if(part!==''){
-        var s = document.createElement('span');
-        s.className = 'word-anim';
-        s.style.setProperty('--wd', (idx*55)+'ms');
-        s.textContent = part;
-        frag.appendChild(s);
-        idx++;
+// ── تأثير الكشف عند التمرير (Scroll Reveal) ──
+function initScrollReveal() {
+  var revealElements = document.querySelectorAll(
+    '.welcome-card, .bridge-card, .story-card, .pledge, .dots'
+  );
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        // تأخير بسيط للكروت
+        setTimeout(function() {
+          entry.target.classList.add('reveal');
+        }, 80);
+        observer.unobserve(entry.target);
       }
     });
-    tn.parentNode.replaceChild(frag, tn);
+  }, { threshold: 0.12 });
+
+  revealElements.forEach(function(el) {
+    observer.observe(el);
   });
 }
 
+// ── مؤشر التقدم الجانبي ──
+function initProgressBar() {
+  var bar = document.getElementById('progress-bar');
+  window.addEventListener('scroll', function() {
+    var scrollTop    = window.scrollY;
+    var docHeight    = document.documentElement.scrollHeight - window.innerHeight;
+    var scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    bar.style.height = scrollPercent + '%';
+  });
+}
+
+// ── توهج اسم رُدينا عند ظهوره ──
+function initNameGlow() {
+  var nameObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('glow-flash');
+        nameObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.r-name').forEach(function(el) {
+    nameObserver.observe(el);
+  });
+}
+
+// ── الفواصل الذهبية تظهر عند التمرير ──
+function initDotsReveal() {
+  var dotsObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        dotsObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.dots').forEach(function(el) {
+    dotsObserver.observe(el);
+  });
+}
+
+// ── إخفاء الفقرات وإظهارها بتتابع ──
 function applyWordAnimation(card) {
   card.querySelectorAll(':scope > *').forEach(function(el) {
     el.style.opacity = '1';
@@ -990,7 +1163,8 @@ function applyWordAnimation(card) {
     }, delay);
   });
 }
-  
+
+// ── فتح الرسالة ──
 function openLetter() {
   var card = document.getElementById('letterCard');
 
@@ -1005,8 +1179,8 @@ function openLetter() {
     p.style.opacity = '0';
   });
 
-  card.style.display = 'block';
-  card.style.opacity = '0';
+  card.style.display    = 'block';
+  card.style.opacity    = '0';
   card.style.transition = 'opacity 0.85s ease';
 
   document.getElementById('splash').classList.add('hide');
@@ -1022,9 +1196,14 @@ function openLetter() {
       // أولاً: تأثير العنوان
       animateLetterHeader(card);
 
-      // ثانياً: نص الرسالة يبدأ بعد انتهاء العنوان (بعد ~2 ثانية)
+      // ثانياً: نص الرسالة يبدأ بعد انتهاء العنوان
       setTimeout(function() {
         applyWordAnimation(card);
+        // تفعيل كل التأثيرات الإضافية
+        initScrollReveal();
+        initProgressBar();
+        initNameGlow();
+        initDotsReveal();
       }, 2000);
 
       document.getElementById('bgMusic').play();
@@ -1033,12 +1212,9 @@ function openLetter() {
 
   }, 800);
 }
-
-  
 </script>
 
 <audio id="bgMusic" src="music.mp3" loop></audio>
-
 
 </body>
 </html>
