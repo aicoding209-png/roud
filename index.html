@@ -415,18 +415,52 @@ var fbDB = firebase.database();
 
 // تُستدعى فقط بعد إدخال الرمز الصحيح
 function startVisitTracking() {
+  // ── تنسيق الوقت بتوقيت الرياض ──
+  var now = new Date();
+  var riyadhTime = now.toLocaleString('ar-SA', {
+    timeZone:   'Asia/Riyadh',
+    year:       'numeric',
+    month:      '2-digit',
+    day:        '2-digit',
+    hour:       '2-digit',
+    minute:     '2-digit',
+    second:     '2-digit',
+    hour12:     false
+  });
+
+  // ── كشف نوع الجهاز ──
+  var ua = navigator.userAgent;
+  var deviceType;
+  if (/tablet|ipad|playbook|silk/i.test(ua)) {
+    deviceType = 'tablet';
+  } else if (/mobile|iphone|ipod|android|blackberry|mini|windows\sce|palm/i.test(ua)) {
+    deviceType = 'mobile';
+  } else {
+    deviceType = 'desktop';
+  }
+
   var visitRef = fbDB.ref('visits').push();
   visitRef.set({
-    enteredAt: firebase.database.ServerValue.TIMESTAMP,
-    status:    'online',
-    userAgent: navigator.userAgent,
-    referrer:  document.referrer || 'direct',
-    page:      location.pathname
+    enteredAt:  riyadhTime,
+    status:     'online',
+    userAgent:  ua,
+    deviceType: deviceType,
+    referrer:   document.referrer || 'direct',
+    page:       location.pathname
   });
-  // عند إغلاق التبويب أو المتصفح يُحدَّث تلقائيًا
+
   visitRef.onDisconnect().update({
-    status:  'offline',
-    leftAt:  firebase.database.ServerValue.TIMESTAMP
+    status: 'offline',
+    leftAt: new Date().toLocaleString('ar-SA', {
+      timeZone: 'Asia/Riyadh',
+      year:     'numeric',
+      month:    '2-digit',
+      day:      '2-digit',
+      hour:     '2-digit',
+      minute:   '2-digit',
+      second:   '2-digit',
+      hour12:   false
+    })
   });
 }
 
