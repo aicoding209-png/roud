@@ -916,16 +916,10 @@ function applyWordAnimation(card) {
 }
 
 var card = document.getElementById('letterCard');
-card.style.opacity = '0';
-card.style.transition = 'none';
-card.style.display = '';
 card.innerHTML = LETTER_HTML;
-// نضمن أن المتصفح يطبّق opacity:0 قبل أي رسم
-requestAnimationFrame(function() {
-  requestAnimationFrame(function() {
-    card.style.transition = 'opacity 0.8s ease';
-  });
-});
+card.style.opacity = '0';
+card.style.transition = 'opacity 0.8s ease';
+card.style.display = '';
 
   document.getElementById('bgMusic').play();
 
