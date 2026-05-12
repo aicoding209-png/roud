@@ -160,7 +160,7 @@
 .write::after {
   content: '';
   position: absolute;
-  bottom: -2px;
+  bottom: 0;
   left: 0;
   width: 100%;
   height: 3px;
@@ -916,32 +916,31 @@ function animateLetterHeader(card) {
   // إعداد أولي
   headerTo.style.opacity = '0';
   headerName.style.opacity = '0';
-  headerTo.style.transition = 'opacity 0.8s ease';
-  headerName.style.transition = 'opacity 0.8s ease';
 
-  // "إلى" تظهر أولاً
+  // "إلى" تظهر أولاً بهدوء
   setTimeout(() => {
+    headerTo.style.transition = 'opacity 0.8s ease';
     headerTo.style.opacity = '1';
-    headerTo.innerHTML = 'إلى';
-  }, 400);
+    headerTo.textContent = 'إلى';
+  }, 300);
 
-  // "رُدينا" بخط اليد (كل حرف يظهر تدريجياً)
+  // "رُدينا" بخط اليد (حرف بحرف)
   setTimeout(() => {
+    headerName.style.transition = 'opacity 0.6s ease';
     headerName.style.opacity = '1';
+    
     headerName.innerHTML = `
-      <span class="handwriting">ر</span>
-      <span class="handwriting">ُ</span>
-      <span class="handwriting">د</span>
-      <span class="handwriting">ي</span>
-      <span class="handwriting">ن</span>
-      <span class="handwriting">ا</span>
+      <span class="handwriting write">ر</span>
+      <span class="handwriting write">ُ</span>
+      <span class="handwriting write">د</span>
+      <span class="handwriting write">ي</span>
+      <span class="handwriting write">ن</span>
+      <span class="handwriting write">ا</span>
     `;
 
-    // تشغيل الأنيميشن حرف بحرف
     const letters = headerName.querySelectorAll('.handwriting');
     letters.forEach((letter, i) => {
-      letter.style.animationDelay = (i * 120) + 'ms';
-      letter.classList.add('write');
+      letter.style.animationDelay = (i * 140) + 'ms';
     });
   }, 1100);
 }
