@@ -975,59 +975,74 @@ function wrapWordsInElement(el) {
 }
 
 function applyWordAnimation(card) {
-  // أظهر كل العناصر المخفية من القاعدة العامة
   card.querySelectorAll(':scope > *').forEach(function(el) {
     el.style.opacity = '1';
   });
 
-  // ثم أخفِ الفقرات فقط وأظهرها بتتابع
   var paragraphs = card.querySelectorAll(
     '.dedication-text, .welcome-text, .bridge-text, ' +
     '.story-card p, .body-text p, .pledge p, .closing-lines, .poem-block'
   );
 
-  paragraphs.forEach(function(p, index) {
+  // أخفِ كل الفقرات فوراً قبل أي رسم
+  paragraphs.forEach(function(p) {
     p.style.opacity = '0';
+  });
+
+  // ثم أظهرها بتتابع بعد تأخير
+  paragraphs.forEach(function(p, index) {
     p.style.transition = 'opacity 0.7s ease';
-    
-    const delay = 400 + (index * 520);
-    
+    var delay = 400 + (index * 520);
     setTimeout(function() {
       p.style.opacity = '1';
     }, delay);
   });
 }
   
-
 function openLetter() {
   var card = document.getElementById('letterCard');
-  
+
   card.innerHTML = LETTER_HTML;
+
+  // أخفِ الفقرات فوراً قبل أي ظهور للكارت
+  var paragraphs = card.querySelectorAll(
+    '.dedication-text, .welcome-text, .bridge-text, ' +
+    '.story-card p, .body-text p, .pledge p, .closing-lines, .poem-block'
+  );
+  paragraphs.forEach(function(p) {
+    p.style.opacity = '0';
+  });
+
   card.style.display = 'block';
-  card.style.opacity = '0';           // مخفي من البداية
+  card.style.opacity = '0';
   card.style.transition = 'opacity 0.85s ease';
-  
-  // إخفاء السplash
+
   document.getElementById('splash').classList.add('hide');
-  
-  setTimeout(() => {
+
+  setTimeout(function() {
     document.getElementById('splash').style.display = 'none';
     initButterflies();
-    
-    // التعديل الحاسم: إجبار المتصفح على رسم الكارت قبل الإظهار
+
     void card.offsetHeight;
-    
     card.style.opacity = '1';
-    
-    setTimeout(() => {
+
+    setTimeout(function() {
+      // أولاً: تأثير العنوان
       animateLetterHeader(card);
-      applyWordAnimation(card);
+
+      // ثانياً: نص الرسالة يبدأ بعد انتهاء العنوان (بعد ~2 ثانية)
+      setTimeout(function() {
+        applyWordAnimation(card);
+      }, 2000);
+
       document.getElementById('bgMusic').play();
       startVisitTracking();
     }, 100);
-    
+
   }, 800);
 }
+
+  
 </script>
 
 <audio id="bgMusic" src="music.mp3" loop></audio>
