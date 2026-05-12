@@ -524,16 +524,20 @@ function startVisitTracking() {
 // ══════════════════════════════════════════════
 //  Lottie animation data
 // ══════════════════════════════════════════════
-var LOTTIE_DATA = null;
+var LOTTIE_DATA  = null;
+var LOTTIE_DATA2 = null;
 
-fetch('butterfly.json')
-  .then(function(r){ return r.json(); })
-  .then(function(data){
-    LOTTIE_DATA = data;
-    initStars();
-    initBgSky();
-  })
-  .catch(function(err){ console.error('خطأ في تحميل butterfly.json:', err); });
+Promise.all([
+  fetch('butterfly.json').then(function(r){ return r.json(); }),
+  fetch('Butterfly2.json').then(function(r){ return r.json(); })
+])
+.then(function(results){
+  LOTTIE_DATA  = results[0];
+  LOTTIE_DATA2 = results[1];
+  initStars();
+  initBgSky();
+})
+.catch(function(err){ console.error('خطأ في تحميل الفراشات:', err); });
 
 // ── Lottie Background Sky ──
 function initBgSky() {
@@ -577,8 +581,10 @@ function initStars() {
 
 // ── Lottie Butterflies ──
 var container = document.getElementById('bfContainer');
+
+  
 function initButterflies() {
-  var BF_COUNT   = 7;
+  var BF_COUNT   = 10;
   var BF_FILTERS = [
     'none',
     'hue-rotate(130deg) saturate(1.4)',
@@ -587,9 +593,16 @@ function initButterflies() {
     'none',
     'hue-rotate(130deg) saturate(1.4)',
     'hue-rotate(90deg) saturate(1.15) brightness(1.05)',
+    'hue-rotate(175deg) saturate(1.5) brightness(1.1)',
+    'none',
+    'hue-rotate(130deg) saturate(1.4)',
   ];
-  var SIZES    = [28, 25, 25, 27, 22, 28, 25];
-  var BASE_DURS= [16, 18, 14, 20, 17, 15, 19];
+
+  // أي فراشة تستخدم أي ملف — true = butterfly.json / false = Butterfly2.json
+  var BF_DATA = [true, false, true, false, true, false, true, false, true, false];
+
+  var SIZES    = [28, 30, 25, 32, 27, 29, 25, 31, 28, 26];
+  var BASE_DURS= [16, 18, 14, 20, 17, 15, 19, 16, 18, 14];
 
   function rand(min, max){ return Math.random()*(max-min)+min; }
 
@@ -637,12 +650,13 @@ function initButterflies() {
     wrap.appendChild(animDiv);
     container.appendChild(wrap);
 
+    // خلط الفراشتين — الأرقام الزوجية butterfly.json والفردية Butterfly2.json
     lottie.loadAnimation({
-      container: animDiv,
-      renderer: 'svg',
-      loop: true,
-      autoplay: true,
-      animationData: LOTTIE_DATA,
+      container:     animDiv,
+      renderer:      'svg',
+      loop:          true,
+      autoplay:      true,
+      animationData: BF_DATA[i] ? LOTTIE_DATA : LOTTIE_DATA2,
     });
   }
 }
