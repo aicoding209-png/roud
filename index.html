@@ -614,7 +614,7 @@ function initButterflies() {
     wrap.className = 'bf-wrap';
     var size     = SIZES[i];
     var dur      = BASE_DURS[i];
-    var fromRight= (i % 2 === 0);
+    var fromRight = Math.random() > 0.5;
     var startX   = fromRight ? vw - size - 10 : 10;
     var stripMid = (i + 0.5) * STRIP_H;
     var jitter   = rand(-STRIP_H * 0.1, STRIP_H * 0.1);
