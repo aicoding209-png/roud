@@ -8,9 +8,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <!-- Lottie -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
-  <!-- Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JZC3J2D027"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-JZC3J2D027');</script>
+
+  <!-- ══ Firebase Compat SDK ══ -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
   <style>
     :root {
       --bg-deep:    #0d0a0f;
@@ -396,18 +398,51 @@
 </div>
 
 <script>
-// ── Lottie animation data ──
-let LOTTIE_DATA = null;
+// ══════════════════════════════════════════════
+//  Firebase — تسجيل الزيارات التاريخية
+// ══════════════════════════════════════════════
+const firebaseConfig = {
+  apiKey:            "AIzaSyC1iZY91Gcl7-mYJv9W7xxSqZsQp5yVLpA",
+  authDomain:        "roud-14312.firebaseapp.com",
+  databaseURL:       "https://roud-14312-default-rtdb.firebaseio.com",
+  projectId:         "roud-14312",
+  storageBucket:     "roud-14312.firebasestorage.app",
+  messagingSenderId: "773994641024",
+  appId:             "1:773994641024:web:b324e6cdc82f287d2ed865"
+};
+firebase.initializeApp(firebaseConfig);
+var fbDB = firebase.database();
+
+// تُستدعى فقط بعد إدخال الرمز الصحيح
+function startVisitTracking() {
+  var visitRef = fbDB.ref('visits').push();
+  visitRef.set({
+    enteredAt: firebase.database.ServerValue.TIMESTAMP,
+    status:    'online',
+    userAgent: navigator.userAgent,
+    referrer:  document.referrer || 'direct',
+    page:      location.pathname
+  });
+  // عند إغلاق التبويب أو المتصفح يُحدَّث تلقائيًا
+  visitRef.onDisconnect().update({
+    status:  'offline',
+    leftAt:  firebase.database.ServerValue.TIMESTAMP
+  });
+}
+
+// ══════════════════════════════════════════════
+//  Lottie animation data
+// ══════════════════════════════════════════════
+var LOTTIE_DATA = null;
 
 fetch('butterfly.json')
-  .then(r => r.json())
-  .then(data => {
+  .then(function(r){ return r.json(); })
+  .then(function(data){
     LOTTIE_DATA = data;
     initStars();
     initBgSky();
-    // initButterflies تُستدعى فقط بعد إدخال الرمز الصحيح
   })
-  .catch(err => console.error('خطأ في تحميل butterfly.json:', err));
+  .catch(function(err){ console.error('خطأ في تحميل butterfly.json:', err); });
 
 // ── Lottie Background Sky ──
 function initBgSky() {
@@ -417,11 +452,9 @@ function initBgSky() {
     loop:       true,
     autoplay:   true,
     path:       'Moon-night-Sky.json',
-    rendererSettings: {
-      preserveAspectRatio: 'xMidYMid slice'
-    }
+    rendererSettings: { preserveAspectRatio: 'xMidYMid slice' }
   });
-  setTimeout(() => {
+  setTimeout(function(){
     document.getElementById('bgLottie').classList.add('visible');
     setTimeout(animateSplashText, 1000);
   }, 100);
@@ -433,10 +466,7 @@ function animateSplashText() {
   titleEl.innerHTML =
     '<span class="word-anim" style="--wd:0ms">إلى</span> ' +
     '<span class="word-anim" style="--wd:220ms; color:#c0392b">رُدينا</span>';
-
-  titleEl.querySelectorAll('.word-anim').forEach(function(w) {
-    w.classList.add('go');
-  });
+  titleEl.querySelectorAll('.word-anim').forEach(function(w){ w.classList.add('go'); });
 
   var inner = document.getElementById('splash-inner');
   inner.style.transition = 'opacity 0.4s ease';
@@ -445,20 +475,20 @@ function animateSplashText() {
 
 // ── Stars ──
 function initStars() {
-  const sc = document.getElementById('stars');
-  for (let i = 0; i < 120; i++) {
-    const s = document.createElement('span');
-    const sz = Math.random() * 2.2 + .6;
-    s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*4+2).toFixed(1)}s;--op:${(Math.random()*.35+.1).toFixed(2)};animation-delay:${(Math.random()*5).toFixed(1)}s;`;
+  var sc = document.getElementById('stars');
+  for (var i = 0; i < 120; i++) {
+    var s  = document.createElement('span');
+    var sz = Math.random() * 2.2 + .6;
+    s.style.cssText = 'width:'+sz+'px;height:'+sz+'px;top:'+(Math.random()*100)+'%;left:'+(Math.random()*100)+'%;--d:'+(Math.random()*4+2).toFixed(1)+'s;--op:'+(Math.random()*.35+.1).toFixed(2)+';animation-delay:'+(Math.random()*5).toFixed(1)+'s;';
     sc.appendChild(s);
   }
 }
 
 // ── Lottie Butterflies ──
-const container = document.getElementById('bfContainer');
+var container = document.getElementById('bfContainer');
 function initButterflies() {
-  const BF_COUNT  = 7;
-  const BF_FILTERS = [
+  var BF_COUNT   = 7;
+  var BF_FILTERS = [
     'none',
     'hue-rotate(130deg) saturate(1.4)',
     'hue-rotate(90deg) saturate(1.15) brightness(1.05)',
@@ -467,85 +497,81 @@ function initButterflies() {
     'hue-rotate(130deg) saturate(1.4)',
     'hue-rotate(90deg) saturate(1.15) brightness(1.05)',
   ];
-  const SIZES = [28, 25, 25, 27, 22, 28, 25];
+  var SIZES    = [28, 25, 25, 27, 22, 28, 25];
+  var BASE_DURS= [16, 18, 14, 20, 17, 15, 19];
 
-  function rand(min, max) { return Math.random() * (max - min) + min; }
+  function rand(min, max){ return Math.random()*(max-min)+min; }
 
-  (function spawnButterflies() {
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const STRIP_H = vh / BF_COUNT;
-    const BASE_DURS = [16, 18, 14, 20, 17, 15, 19];
+  var vw = window.innerWidth, vh = window.innerHeight;
+  var STRIP_H = vh / BF_COUNT;
 
-    for (let i = 0; i < BF_COUNT; i++) {
-      const wrap = document.createElement('div');
-      wrap.className = 'bf-wrap';
+  for (var i = 0; i < BF_COUNT; i++) {
+    var wrap     = document.createElement('div');
+    wrap.className = 'bf-wrap';
+    var size     = SIZES[i];
+    var dur      = BASE_DURS[i];
+    var fromRight= (i % 2 === 0);
+    var startX   = fromRight ? vw - size - 10 : 10;
+    var stripMid = (i + 0.5) * STRIP_H;
+    var jitter   = rand(-STRIP_H * 0.1, STRIP_H * 0.1);
+    var startYpx = Math.min(Math.max(stripMid + jitter, size), vh - size);
+    var startYpct= (startYpx / vh) * 100;
+    var travelX  = fromRight ? -rand(100, 170) : rand(100, 170);
+    var maxWobble= STRIP_H * 0.4;
+    var wobble   = function(){ return rand(-maxWobble, maxWobble); };
+    var delay    = (i / BF_COUNT) * dur;
+    var opacity  = rand(0.72, 0.9);
 
-      const size = SIZES[i];
-      const dur  = BASE_DURS[i];
-      const fromRight = (i % 2 === 0);
-      const startX = fromRight ? vw - size - 10 : 10;
-      const stripMid  = (i + 0.5) * STRIP_H;
-      const jitter    = rand(-STRIP_H * 0.1, STRIP_H * 0.1);
-      const startYpx  = Math.min(Math.max(stripMid + jitter, size), vh - size);
-      const startYpct = (startYpx / vh) * 100;
-      const travelX = fromRight ? -rand(100, 170) : rand(100, 170);
-      const maxWobble = STRIP_H * 0.4;
-      const wobble    = () => rand(-maxWobble, maxWobble);
-      const delay   = (i / BF_COUNT) * dur;
-      const opacity = rand(0.72, 0.9);
+    wrap.style.cssText = [
+      'left:'+startX+'px',
+      'top:'+startYpct.toFixed(1)+'%',
+      '--fly-dur:'+dur+'s',
+      '--fly-delay:-'+delay.toFixed(1)+'s',
+      '--bf-size:'+size+'px',
+      '--bf-op:'+opacity,
+      '--sx:'+(fromRight ? -1 : 1),
+      '--x25:'+(travelX*0.25).toFixed(1)+'px',
+      '--y25:'+wobble().toFixed(1)+'px',
+      '--x50:'+(travelX*0.5).toFixed(1)+'px',
+      '--y50:'+wobble().toFixed(1)+'px',
+      '--x75:'+(travelX*0.75).toFixed(1)+'px',
+      '--y75:'+wobble().toFixed(1)+'px',
+      '--xf:'+travelX.toFixed(1)+'px',
+      '--yf:'+wobble().toFixed(1)+'px',
+    ].join(';');
 
-      wrap.style.cssText = [
-        `left:${startX}px`,
-        `top:${startYpct.toFixed(1)}%`,
-        `--fly-dur:${dur}s`,
-        `--fly-delay:-${delay.toFixed(1)}s`,
-        `--bf-size:${size}px`,
-        `--bf-op:${opacity}`,
-        `--sx:${fromRight ? -1 : 1}`,
-        `--x25:${travelX * 0.25}px`,
-        `--y25:${wobble().toFixed(1)}px`,
-        `--x50:${travelX * 0.5}px`,
-        `--y50:${wobble().toFixed(1)}px`,
-        `--x75:${travelX * 0.75}px`,
-        `--y75:${wobble().toFixed(1)}px`,
-        `--xf:${travelX}px`,
-        `--yf:${wobble().toFixed(1)}px`,
-      ].join(';');
+    var animDiv = document.createElement('div');
+    animDiv.className = 'bf-anim';
+    animDiv.style.cssText = 'width:'+size+'px;height:'+size+'px;filter:'+BF_FILTERS[i]+';';
+    wrap.appendChild(animDiv);
+    container.appendChild(wrap);
 
-      const animDiv = document.createElement('div');
-      animDiv.className = 'bf-anim';
-      animDiv.style.cssText = `width:${size}px;height:${size}px;filter:${BF_FILTERS[i]};`;
-      wrap.appendChild(animDiv);
-      container.appendChild(wrap);
-
-      lottie.loadAnimation({
-        container: animDiv,
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        animationData: LOTTIE_DATA,
-      });
-    }
-  })();
+    lottie.loadAnimation({
+      container: animDiv,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      animationData: LOTTIE_DATA,
+    });
+  }
 }
 
 // ── PIN ──
 var entered = '', correct = '0909';
-function pressKey(k) { if (entered.length >= 4) return; entered += k; updateDots(); if (entered.length === 4) checkCode(); }
-function deleteKey() { entered = entered.slice(0,-1); updateDots(); document.getElementById('error-msg').textContent = ''; }
-function updateDots() { for (var i=0;i<4;i++) { var d=document.getElementById('d'+i); d.classList.toggle('filled',i<entered.length); d.classList.remove('error'); } }
-function checkCode() {
-  if (entered === correct) { openLetter(); }
-  else {
-    for (var i=0;i<4;i++) document.getElementById('d'+i).classList.add('error');
-    document.getElementById('error-msg').textContent = 'الرمز غير صحيح، حاولي مجدداً';
+function pressKey(k){ if(entered.length>=4) return; entered+=k; updateDots(); if(entered.length===4) checkCode(); }
+function deleteKey(){ entered=entered.slice(0,-1); updateDots(); document.getElementById('error-msg').textContent=''; }
+function updateDots(){ for(var i=0;i<4;i++){var d=document.getElementById('d'+i);d.classList.toggle('filled',i<entered.length);d.classList.remove('error');} }
+function checkCode(){
+  if(entered===correct){ openLetter(); }
+  else{
+    for(var i=0;i<4;i++) document.getElementById('d'+i).classList.add('error');
+    document.getElementById('error-msg').textContent='الرمز غير صحيح، حاولي مجدداً';
     setTimeout(function(){ entered=''; updateDots(); document.getElementById('error-msg').textContent=''; }, 1200);
   }
 }
 
-// ── محتوى الرسالة — لا يُحقن إلا بعد الرمز الصحيح ──
-const LETTER_HTML = `
+// ── محتوى الرسالة ──
+var LETTER_HTML = `
   <div class="corner corner-tl"></div>
   <div class="corner corner-tr"></div>
   <div class="corner corner-bl"></div>
@@ -580,9 +606,6 @@ const LETTER_HTML = `
 
   <div class="dots">· · ·</div>
 
-<!-- ══════════════════════════════════════
-       SECTION 1 — سماع الاسم  (وردي / Rose)
-       ══════════════════════════════════════ -->
   <div class="story-label story-label--rose">❧&ensp;حين سمعتُ اسمكِ&ensp;❧</div>
   <div class="story-card story-card--rose">
     <p>
@@ -612,13 +635,10 @@ const LETTER_HTML = `
   </div>
   <div class="dots">· · ·</div>
 
-  <!-- ══════════════════════════════════════
-       SECTION 2 — رؤيتها  (أزرق / Blue)
-       ══════════════════════════════════════ -->
   <div class="story-label story-label--blue">❧&ensp;حين رأيتُكِ&ensp;❧</div>
   <div class="story-card story-card--blue">
     <p>
-      <span class="r-name">رُدينا</span>،<br>
+      <span class="r-name">رُدينا</span>,<br>
       يا وردتي وأميرة قلبي، من أيّ نقطة يبدأ الكلام؟ أمن تلك اللحظة التي وقعت فيها العين عليكِ لأول مرة، أم مما سبقها من اضطراب عذب لا تفسير له؟ كأن القلب كان يعرف، بحاسّة مجهولة لا يُحسن تسميتها، أن شيئًا جسيمًا يقترب، وأنه لن يخرج من تلك اللحظة كما دخلها.
     </p>
     <p>
@@ -643,9 +663,6 @@ const LETTER_HTML = `
       وكيف أصف شعركِ يا وردتي؟ لن أصفه. الوصف يقع على ما تستوعبه العين وتنتهي إليه، وشعركِ لا ينتهي. هو كلامٌ لم تنطقي به يومًا، يقوله الليل عنكِ وأنتِ نائمة وأنتِ مستيقظة، تحملينه على كتفيكِ ولا تدرين. ورأيتُه، فعلمتُ أن ثمة أشياء خُلقت لترى لا لتُقال، ومن أراد قولها أساء إليها. وأنا لا أريد أن أُسيء.
     </p>
     <p>
-      وعن ماذا أُحدّثكِ أيضاً يا حبيبتي؟ هل أبدأ من عينيكِ واحمرار خدّيكِ؟ أم من ثغركِ المبتسم وعودكِ المتزن؟ وهل أُكمل إلى أنفكِ المرسوم وجفنكِ الموسوم؟ جميعًا يُكمل بعضُها بعضًا يا حبيبتي، في تناسقٍ لم يترك داخلي موضعًا للتفكير؛ كأنكِ لوحةٌ ربّانية تتآلف فيها المحاسن حتى تخطف القلب والعقل معًا.
-    </p>
-    <p>
       وبينما كنتُ واقفًا أحاول أن أستوعب المشهد، قالوا لكِ: <em style="color:var(--gold-light)">انظري إليه.</em><br><br>
       فرفعتِ رأسكِ... ورفعتِ معه قلبي من موضعه.
     </p>
@@ -662,9 +679,6 @@ const LETTER_HTML = `
 
   <div class="dots">· · ·</div>
 
-  <!-- ══════════════════════════════════════
-       SECTION 3 — سماع صوتها  (أخضر / Green)
-       ══════════════════════════════════════ -->
   <div class="story-label story-label--green">❧&ensp;حين سمعتُ صوتكِ&ensp;❧</div>
   <div class="story-card story-card--green">
     <p>
@@ -674,19 +688,13 @@ const LETTER_HTML = `
       كنتِ تتحدّثينَ مع أمّي، فطلبتُ منها — بإشارةٍ واحدة — أن ترفعَ الصوت. وفي تلك الثانيةِ التي سبقَتْ أن تنطقي، كانت الدنيا كلُّها صامتةً كأنّها تعرفُ أنّ شيئًا نادرًا على وشكِ الحدوث.
     </p>
     <p>
-      ثمّ تكلّمتِ. فعّم الصمت داخلي وتبسمت وحبست انفاسي حتى استشعرَ ذلك الصوت... صوتكِ لم تترجمه أذني كـ موجاتٍ صوتيةً تُسمَع،
-بل أمواج بحريةٌ باردةٌ مرّت من أذني ونزلت على قلبي،
-فأخمدتْ حرائقه كلّها.كان صوتكِ يشبه أشياءَ كثيرةً :
-كمثل نوتةً موسيقيةً تاهت من عصورٍ بعيدة ثم وجدت مأواها في أذني،
-وكصوتَ الرياحِ وهي تتسلّل من شباكِ بيتٍ صغيرٍ في غابة، تحتَ جوٍّ ممطر،
-فتحرّكُ الستائرَ برفق،
-وتوقظُ في القلبِ شوقًا لا يعرفُ النسيان.  كأنّ البراءةَ لم تُفارقْه يومًا، هادئٌ كأنّه يخشى أن يُزعجَ الهواءَ من حوله. لم يكن صوتًا عاديًّا، كان شيئًا تعجزُ عن وصفه العبارات وتستسلمُ أمامه الكلمات. وقفتُ لا بجسدي فحسب، بل بكلِّ ما فيّ — وأنا أسمعُ وأتمنّى ألّا تنتهين. وخطرَ ببالي في تلك اللحظةِ تمنٍّ واحد، بسيطٌ وصعب ايضاً : أن أسمعَ اسمي بذلك الصوت. أن تنطقَ لسانُكِ حروفَه كما تنطقُ بكلِّ شيء — بنعومةٍ تُشبهُكِ، وهدوءٍ يسكنُ القلبَ قبلَ أن يصلَ الأذن.
+      ثمّ تكلّمتِ. فعّم الصمت داخلي وتبسمت وحبست انفاسي حتى استشعرَ ذلك الصوت... صوتكِ لم تترجمه أذني كـ موجاتٍ صوتيةً تُسمَع، بل أمواج بحريةٌ باردةٌ مرّت من أذني ونزلت على قلبي، فأخمدتْ حرائقه كلّها. كان صوتكِ يشبه أشياءَ كثيرةً: كمثل نوتةً موسيقيةً تاهت من عصورٍ بعيدة ثم وجدت مأواها في أذني، وكصوتَ الرياحِ وهي تتسلّل من شباكِ بيتٍ صغيرٍ في غابة، تحتَ جوٍّ ممطر، فتحرّكُ الستائرَ برفق، وتوقظُ في القلبِ شوقًا لا يعرفُ النسيان. كأنّ البراءةَ لم تُفارقْه يومًا، هادئٌ كأنّه يخشى أن يُزعجَ الهواءَ من حوله. لم يكن صوتًا عاديًّا، كان شيئًا تعجزُ عن وصفه العبارات وتستسلمُ أمامه الكلمات. وقفتُ لا بجسدي فحسب، بل بكلِّ ما فيّ — وأنا أسمعُ وأتمنّى ألّا تنتهين. وخطرَ ببالي في تلك اللحظةِ تمنٍّ واحد، بسيطٌ وصعب أيضًا: أن أسمعَ اسمي بذلك الصوت. أن تنطقَ لسانُكِ حروفَه كما تنطقُ بكلِّ شيء — بنعومةٍ تُشبهُكِ، وهدوءٍ يسكنُ القلبَ قبلَ أن يصلَ الأذن.
     </p>
   </div>
 
   <div class="dots">· · ·</div>
 
-<div class="body-text">
+  <div class="body-text">
     <p>وفي حكايتنا الصامتة يا حبيبتي، هناك أشياء خفيّة لا يعلمها أحدٌ من البشر، ولا أدري لماذا كنتُ أقوم بها.</p>
     <p>من تلك الأشياء، كنتُ أمرُّ بجوار ِبيتكم في الخفاء كأنني ذاك العاشق الذي يجد في قرب الحبيب تلذذًا، وعشتُ معنى قول قيس:</p>
     <div class="poem-block">
@@ -699,7 +707,6 @@ const LETTER_HTML = `
     <p>واليوم، وقد صرتِ زوجتي، أشعر أنّ الله لم يرزقني زوجة فحسب، بل رزقني سكنًا، ومودّةً، ورحمةً، وقلبًا أودّ لو أقضي بقربه العمر كلّه، ممتنًّا لهذه النعمة في كل يوم.</p>
   </div>
   <div class="dots">· · ·</div>
-  
 
   <div class="pledge">
     <div class="pledge-title">أعاهدكِ يا <span class="r-name">رُدينا</span>، يا زوجتي وحبيبتي،</div>
@@ -708,11 +715,9 @@ const LETTER_HTML = `
   </div>
 
   <div class="closing">
-
-  <p style="font-family:'Amiri',serif;font-size:1.08rem;color:var(--text-body);line-height:2.2;margin-bottom:28px;">
+    <p style="font-family:'Amiri',serif;font-size:1.08rem;color:var(--text-body);line-height:2.2;margin-bottom:28px;">
       فأنتِ لستِ أنثى أحببتُها فحسب، أنتِ الأنثى التي، حين رأيتها، شعرتُ أنّ قلبي بلغ أخيرًا وجهته، ووصل، بعد طول ترحالٍ خفيّ، إلى موطنه.
     </p>
-    
     <div class="closing-lines">
        <span class="r-name">رُدينا</span>،<br>
       يا صاحبة العينين اللتين فعلتا، في لحظةٍ واحدة،<br>
@@ -724,20 +729,14 @@ const LETTER_HTML = `
       أهلًا بكِ حبيبتي.
     </div>
     <div class="closing-divider"></div>
-    
     <div class="fleuron">❦</div>
-    
-<p class="signature" style="margin-top:20px;">
-  بالحبّ وحده كتبتُ بقلمي… وما كان سواه ليكتب.<br>
-  <span style="display:flex; justify-content:flex-end; align-items:center; gap:12px; margin-top:40px;">
-    <span style="color:var(--red);">زوجك إبراهيم</span>
-    <img src="sign.png" alt="" 
-         style="height:55px; width:auto; vertical-align:middle;">
-  </span>
-</p>
-
-
-
+    <p class="signature" style="margin-top:20px;">
+      بالحبّ وحده كتبتُ بقلمي… وما كان سواه ليكتب.<br>
+      <span style="display:flex; justify-content:flex-end; align-items:center; gap:12px; margin-top:40px;">
+        <span style="color:var(--red);">زوجك إبراهيم</span>
+        <img src="sign.png" alt="" style="height:55px; width:auto; vertical-align:middle;">
+      </span>
+    </p>
   </div>
 `;
 
@@ -753,34 +752,30 @@ function animateLetterHeader(card) {
   headerName.querySelector('.word-anim').classList.add('go');
 
   var rest = card.querySelectorAll('.dots, .opening-card, .welcome-card, .bridge-card, .story-label, .story-card, .body-text, .pledge, .closing, .fleuron');
-  rest.forEach(function(el) {
+  rest.forEach(function(el){
     el.style.opacity = '0';
     el.style.transition = 'opacity 0.5s ease';
   });
-  setTimeout(function() {
-    rest.forEach(function(el) { el.style.opacity = '1'; });
-  }, 750);
+  setTimeout(function(){ rest.forEach(function(el){ el.style.opacity='1'; }); }, 750);
 }
 
-// ── تغليف كلمات العنصر بـ spans ──
 function wrapWordsInElement(el) {
   var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
   var textNodes = [];
   var node;
-  while ((node = walker.nextNode())) { textNodes.push(node); }
-
+  while((node = walker.nextNode())){ textNodes.push(node); }
   var idx = 0;
-  textNodes.forEach(function(tn) {
-    if (tn.textContent.trim() === '') return;
+  textNodes.forEach(function(tn){
+    if(tn.textContent.trim()==='') return;
     var parts = tn.textContent.split(/(\s+)/);
-    var frag = document.createDocumentFragment();
-    parts.forEach(function(part) {
-      if (/^\s+$/.test(part)) {
+    var frag  = document.createDocumentFragment();
+    parts.forEach(function(part){
+      if(/^\s+$/.test(part)){
         frag.appendChild(document.createTextNode(part));
-      } else if (part !== '') {
+      } else if(part!==''){
         var s = document.createElement('span');
         s.className = 'word-anim';
-        s.style.setProperty('--wd', (idx * 55) + 'ms');
+        s.style.setProperty('--wd', (idx*55)+'ms');
         s.textContent = part;
         frag.appendChild(s);
         idx++;
@@ -790,7 +785,6 @@ function wrapWordsInElement(el) {
   });
 }
 
-// ── تطبيق أنيميشن الكلمات على كامل الرسالة ──
 function applyWordAnimation(card) {
   var targets = card.querySelectorAll(
     '.dedication-text, .welcome-text, .bridge-text, ' +
@@ -798,43 +792,36 @@ function applyWordAnimation(card) {
     '.body-text p, .poem-block, .pledge-title, .pledge p, ' +
     '.closing-lines, .signature'
   );
-
-  targets.forEach(function(el) { wrapWordsInElement(el); });
-
-  var obs = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) {
-      if (e.isIntersecting) {
-        e.target.querySelectorAll('.word-anim').forEach(function(w) {
-          w.classList.add('go');
-        });
+  targets.forEach(function(el){ wrapWordsInElement(el); });
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.querySelectorAll('.word-anim').forEach(function(w){ w.classList.add('go'); });
         obs.unobserve(e.target);
       }
     });
   }, { threshold: 0.1 });
-
-  targets.forEach(function(el) { obs.observe(el); });
+  targets.forEach(function(el){ obs.observe(el); });
 }
 
 function openLetter() {
-  // 1. حقن المحتوى في الـ article
-  const card = document.getElementById('letterCard');
+  var card = document.getElementById('letterCard');
   card.innerHTML = LETTER_HTML;
   card.style.display = '';
 
   document.getElementById('bgMusic').play();
 
-  // 2. أنيميشن العنوان + كامل نص الرسالة كلمة كلمة
-  animateLetterHeader(card);
-  setTimeout(function() { applyWordAnimation(card); }, 800);
+  // ── بدء تتبع الزيارة في Firebase ──
+  startVisitTracking();
 
-  // 3. إخفاء splash
-  document.getElementById('pin-container').style.opacity = '0';
-  document.getElementById('splash-hint').style.opacity  = '0';
+  animateLetterHeader(card);
+  setTimeout(function(){ applyWordAnimation(card); }, 800);
+
+  document.getElementById('pin-container').style.opacity  = '0';
+  document.getElementById('splash-hint').style.opacity    = '0';
   document.getElementById('splash-fleuron').style.opacity = '0';
-  document.getElementById('splash-title').style.transition = 'opacity .4s';
-  setTimeout(() => {
-    document.getElementById('splash-title').style.opacity = '0';
-  }, 200);
+  document.getElementById('splash-title').style.transition= 'opacity .4s';
+  setTimeout(function(){ document.getElementById('splash-title').style.opacity='0'; }, 200);
 
   var s = document.getElementById('splash');
   s.classList.add('hide');
@@ -845,7 +832,16 @@ function openLetter() {
 }
 </script>
 
-      <audio id="bgMusic" src="music.mp3" loop></audio>
+<audio id="bgMusic" src="music.mp3" loop></audio>
+
+<!-- ══ LiveWebTraffic Widget ══ -->
+<script src="https://www.livewebtraffic.com/dist/widget.bundle.js"></script>
+<script>
+  LiveWidget.init({
+    trackingCode: '912a90d6-302f-4a08-a61d-0ef33fa60de3',
+    ws: 'wss://www.livewebtraffic.com'
+  });
+</script>
 
 </body>
 </html>
