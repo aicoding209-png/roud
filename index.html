@@ -915,11 +915,12 @@ function applyWordAnimation(card) {
   targets.forEach(function(el){ obs.observe(el); });
 }
 
-var card = document.getElementById('letterCard');
-card.innerHTML = LETTER_HTML;
-card.style.opacity = '0';
-card.style.transition = 'opacity 0.8s ease';
-card.style.display = '';
+function openLetter() {
+  var card = document.getElementById('letterCard');
+  card.innerHTML = LETTER_HTML;
+  card.style.opacity = '0';          // مخفي أولاً
+  card.style.transition = 'opacity 0.8s ease';
+  card.style.display = '';
 
   document.getElementById('bgMusic').play();
 
