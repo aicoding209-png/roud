@@ -425,7 +425,7 @@ function startVisitTracking() {
     hour:     '2-digit',
     minute:   '2-digit',
     second:   '2-digit',
-    hour12:   false
+    hour12:   true
   });
 
   // ── كشف الجهاز بشكل تفصيلي ──
@@ -453,7 +453,6 @@ function startVisitTracking() {
     deviceModel = 'iPad';
 
   } else if (/Android/i.test(ua)) {
-    // يستخرج اسم الموديل مباشرة من userAgent مثل: SM-S918B أو Pixel 7
     var androidMatch = ua.match(/\(Linux; Android [\d.]+;\s*([^)]+)\)/);
     deviceModel = androidMatch ? androidMatch[1].trim() : 'Android Device';
     deviceType  = /tablet|playbook|silk/i.test(ua) ? 'tablet' : 'mobile';
@@ -492,7 +491,7 @@ function startVisitTracking() {
       hour:     '2-digit',
       minute:   '2-digit',
       second:   '2-digit',
-      hour12:   false
+      hour12:   true
     })
   });
 }
