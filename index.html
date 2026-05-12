@@ -977,6 +977,12 @@ function wrapWordsInElement(el) {
 }
 
 function applyWordAnimation(card) {
+  // أظهر كل العناصر المخفية من القاعدة العامة
+  card.querySelectorAll(':scope > *').forEach(function(el) {
+    el.style.opacity = '1';
+  });
+
+  // ثم أخفِ الفقرات فقط وأظهرها بتتابع
   var paragraphs = card.querySelectorAll(
     '.dedication-text, .welcome-text, .bridge-text, ' +
     '.story-card p, .body-text p, .pledge p, .closing-lines, .poem-block'
@@ -984,17 +990,15 @@ function applyWordAnimation(card) {
 
   paragraphs.forEach(function(p, index) {
     p.style.opacity = '0';
-    p.style.transition = 'opacity 0.7s ease';   // يمكنك تغيير 0.7s حسب الرغبة
+    p.style.transition = 'opacity 0.7s ease';
     
-    // التحكم في السرعة هنا ↓
-    const delay = 400 + (index * 520);   // ← زد الرقم 320 ليصبح أبطأ
+    const delay = 400 + (index * 520);
     
-    setTimeout(() => {
+    setTimeout(function() {
       p.style.opacity = '1';
     }, delay);
   });
 }
-
   
 
 function openLetter() {
