@@ -897,17 +897,25 @@ function wrapWordsInElement(el) {
 }
 
 function applyWordAnimation(card) {
-  var paragraphs = card.querySelectorAll('.dedication-text, .welcome-text, .bridge-text, .story-card p, .body-text p, .pledge p, .closing-lines');
+  var paragraphs = card.querySelectorAll(
+    '.dedication-text, .welcome-text, .bridge-text, ' +
+    '.story-card p, .body-text p, .pledge p, .closing-lines, .poem-block'
+  );
 
   paragraphs.forEach(function(p, index) {
     p.style.opacity = '0';
-    p.style.transition = 'opacity 0.6s ease';
+    p.style.transition = 'opacity 0.7s ease';   // يمكنك تغيير 0.7s حسب الرغبة
+    
+    // التحكم في السرعة هنا ↓
+    const delay = 400 + (index * 320);   // ← زد الرقم 320 ليصبح أبطأ
     
     setTimeout(() => {
       p.style.opacity = '1';
-    }, 300 + (index * 180)); // كل سطر/فقرة يظهر بعد الذي قبله
+    }, delay);
   });
 }
+
+  
 
 function openLetter() {
   var card = document.getElementById('letterCard');
