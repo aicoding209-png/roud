@@ -1285,7 +1285,7 @@ function spawnStars(cx, cy) {
       'z-index:9999',
       'transform:translate(-50%,-50%)',
       'text-shadow:0 0 6px ' + color,
-      'transition:transform 1.4s ease, opacity 1.4s ease',
+      'transition:transform 2.5s ease, opacity 2.5s ease',
       'opacity:1',
       'will-change:transform,opacity'
     ].join(';');
@@ -1296,7 +1296,7 @@ function spawnStars(cx, cy) {
       return function() {
         s.style.transform = 'translate(calc(-50% + ' + x + 'px), calc(-50% + ' + y + 'px)) scale(0)';
         s.style.opacity = '0';
-        setTimeout(function() { s.remove(); }, 1450);
+        setTimeout(function() { s.remove(); }, 2550);
       };
     }(star, dx, dy));
   }
