@@ -914,6 +914,8 @@ function applyWordAnimation(card) {
 function openLetter() {
   var card = document.getElementById('letterCard');
   card.innerHTML = LETTER_HTML;
+  card.style.opacity = '0';          // مخفي أولاً
+  card.style.transition = 'opacity 0.8s ease';
   card.style.display = '';
 
   document.getElementById('bgMusic').play();
@@ -935,6 +937,8 @@ function openLetter() {
   setTimeout(function(){
     s.style.display = 'none';
     initButterflies();
+    // تظهر الرسالة بتلاشي بعد اختفاء الـ splash
+    setTimeout(function(){ card.style.opacity = '1'; }, 100);
   }, 900);
 }
 </script>
