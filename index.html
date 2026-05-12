@@ -415,43 +415,76 @@ var fbDB = firebase.database();
 
 // تُستدعى فقط بعد إدخال الرمز الصحيح
 function startVisitTracking() {
-  // ── تنسيق الوقت بتوقيت الرياض ──
+  // ── تنسيق الوقت بأرقام إنجليزية بتوقيت الرياض ──
   var now = new Date();
-  var riyadhTime = now.toLocaleString('ar-SA', {
-    timeZone:   'Asia/Riyadh',
-    year:       'numeric',
-    month:      '2-digit',
-    day:        '2-digit',
-    hour:       '2-digit',
-    minute:     '2-digit',
-    second:     '2-digit',
-    hour12:     false
+  var riyadhTime = now.toLocaleString('en-GB', {
+    timeZone: 'Asia/Riyadh',
+    year:     'numeric',
+    month:    '2-digit',
+    day:      '2-digit',
+    hour:     '2-digit',
+    minute:   '2-digit',
+    second:   '2-digit',
+    hour12:   false
   });
 
-  // ── كشف نوع الجهاز ──
+  // ── كشف الجهاز بشكل تفصيلي ──
   var ua = navigator.userAgent;
-  var deviceType;
-  if (/tablet|ipad|playbook|silk/i.test(ua)) {
-    deviceType = 'tablet';
-  } else if (/mobile|iphone|ipod|android|blackberry|mini|windows\sce|palm/i.test(ua)) {
+  var deviceType  = 'desktop';
+  var deviceModel = 'Unknown';
+
+  if (/iPhone/i.test(ua)) {
     deviceType = 'mobile';
-  } else {
-    deviceType = 'desktop';
+    var iosMatch = ua.match(/iPhone OS ([\d_]+)/);
+    if (iosMatch) {
+      var major = parseInt(iosMatch[1].split('_')[0]);
+      if      (major >= 18) deviceModel = 'iPhone 16 Series';
+      else if (major === 17) deviceModel = 'iPhone 15 Series';
+      else if (major === 16) deviceModel = 'iPhone 14 Series';
+      else if (major === 15) deviceModel = 'iPhone 13 Series';
+      else if (major === 14) deviceModel = 'iPhone 12 Series';
+      else                   deviceModel = 'iPhone (iOS ' + iosMatch[1].replace(/_/g,'.') + ')';
+    } else {
+      deviceModel = 'iPhone';
+    }
+
+  } else if (/iPad/i.test(ua)) {
+    deviceType  = 'tablet';
+    deviceModel = 'iPad';
+
+  } else if (/Android/i.test(ua)) {
+    // يستخرج اسم الموديل مباشرة من userAgent مثل: SM-S918B أو Pixel 7
+    var androidMatch = ua.match(/\(Linux; Android [\d.]+;\s*([^)]+)\)/);
+    deviceModel = androidMatch ? androidMatch[1].trim() : 'Android Device';
+    deviceType  = /tablet|playbook|silk/i.test(ua) ? 'tablet' : 'mobile';
+
+  } else if (/Windows/i.test(ua)) {
+    deviceType  = 'desktop';
+    deviceModel = 'Windows PC';
+
+  } else if (/Macintosh|Mac OS/i.test(ua)) {
+    deviceType  = 'desktop';
+    deviceModel = 'Mac';
+
+  } else if (/Linux/i.test(ua)) {
+    deviceType  = 'desktop';
+    deviceModel = 'Linux PC';
   }
 
   var visitRef = fbDB.ref('visits').push();
   visitRef.set({
-    enteredAt:  riyadhTime,
-    status:     'online',
-    userAgent:  ua,
-    deviceType: deviceType,
-    referrer:   document.referrer || 'direct',
-    page:       location.pathname
+    enteredAt:   riyadhTime,
+    status:      'online',
+    userAgent:   ua,
+    deviceType:  deviceType,
+    deviceModel: deviceModel,
+    referrer:    document.referrer || 'direct',
+    page:        location.pathname
   });
 
   visitRef.onDisconnect().update({
     status: 'offline',
-    leftAt: new Date().toLocaleString('ar-SA', {
+    leftAt: new Date().toLocaleString('en-GB', {
       timeZone: 'Asia/Riyadh',
       year:     'numeric',
       month:    '2-digit',
