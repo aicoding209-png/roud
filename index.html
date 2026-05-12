@@ -1211,6 +1211,58 @@ function openLetter() {
 
   }, 800);
 }
+
+
+
+// ── نجوم ذهبية عند اللمس/الضغط ──
+document.addEventListener('click', spawnStars);
+document.addEventListener('touchstart', function(e) {
+  Array.from(e.touches).forEach(function(t) {
+    spawnStars({ clientX: t.clientX, clientY: t.clientY });
+  });
+}, { passive: true });
+
+function spawnStars(e) {
+  var count = 8;
+  for (var i = 0; i < count; i++) {
+    var star = document.createElement('span');
+    star.innerHTML = '✦';
+    var size = Math.random() * 14 + 8;
+    var angle = (i / count) * 360;
+    var dist = Math.random() * 55 + 25;
+    var dx = Math.cos(angle * Math.PI / 180) * dist;
+    var dy = Math.sin(angle * Math.PI / 180) * dist;
+    var colors = ['#c9a96e','#e8d4a8','#f5e6c8','#fff8e7'];
+    var color = colors[Math.floor(Math.random() * colors.length)];
+
+    star.style.cssText = [
+      'position:fixed',
+      'left:' + e.clientX + 'px',
+      'top:' + e.clientY + 'px',
+      'font-size:' + size + 'px',
+      'color:' + color,
+      'pointer-events:none',
+      'z-index:9999',
+      'transform:translate(-50%,-50%)',
+      'text-shadow:0 0 6px ' + color,
+      'transition:transform .6s ease, opacity .6s ease',
+      'opacity:1',
+      'will-change:transform,opacity'
+    ].join(';');
+
+    document.body.appendChild(star);
+
+    requestAnimationFrame(function(s, x, y) {
+      return function() {
+        s.style.transform = 'translate(calc(-50% + ' + x + 'px), calc(-50% + ' + y + 'px)) scale(0)';
+        s.style.opacity = '0';
+        setTimeout(function() { s.remove(); }, 650);
+      };
+    }(star, dx, dy));
+  }
+}
+
+  
 </script>
 
 <audio id="bgMusic" src="music.mp3" loop></audio>
