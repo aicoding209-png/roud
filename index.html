@@ -116,8 +116,66 @@
     .corner { display:none; }
 
     /* ── Typography ── */
-    .header-to { text-align:center; font-family:'Amiri',serif; font-style:italic; font-size:1.05rem; color:var(--gold-dim); letter-spacing:.08em; margin-bottom:6px; }
-    .header-name { text-align:center; font-family:'Amiri',serif; font-size:3.2rem; font-weight:700; color:var(--red); line-height:1.1; text-shadow:0 0 28px rgba(192,57,43,.6),0 0 60px rgba(192,57,43,.3), 0 2px 12px rgba(0,0,0,.95); margin-bottom:28px; }
+.header-to { 
+  text-align:center; 
+  font-family:'Amiri',serif; 
+  font-style:italic; 
+  font-size:1.05rem; 
+  color:var(--gold-dim); 
+  letter-spacing:.08em; 
+  margin-bottom:6px; 
+}
+
+.header-name { 
+  text-align:center; 
+  font-family:'Amiri',serif; 
+  font-size:3.5rem; 
+  font-weight:700; 
+  color:var(--red); 
+  line-height:1.1; 
+  text-shadow:0 0 25px rgba(192,57,43,0.6), 0 4px 20px rgba(0,0,0,0.9); 
+  margin-bottom:28px;
+  letter-spacing: 0.05em;
+}
+
+/* ── تأثير خط اليد ── */
+.handwriting {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(15px);
+  animation: handwritingAnim 0.6s ease forwards;
+}
+
+@keyframes handwritingAnim {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.write {
+  position: relative;
+}
+
+.write::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(to right, transparent, #c0392b, transparent);
+  animation: underline 0.9s ease forwards;
+  animation-delay: inherit;
+}
+
+@keyframes underline {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+
+    
     .fleuron { text-align:center; font-size:1.4rem; color:var(--gold); opacity:.7; margin-bottom:28px; }
     .dots { text-align:center; letter-spacing:.5em; color:var(--gold-dim); font-size:.7rem; margin:26px 0; }
 
@@ -853,21 +911,39 @@ var LETTER_HTML = `
 
 function animateLetterHeader(card) {
   var headerTo = card.querySelector('.header-to');
-  headerTo.innerHTML = '<span class="word-anim" style="--wd:0ms">إلى</span>';
-  headerTo.style.opacity = '1';
-  headerTo.querySelector('.word-anim').classList.add('go');
-
   var headerName = card.querySelector('.header-name');
-  headerName.innerHTML = '<span class="word-anim" style="--wd:280ms">رُدينا</span>';
-  headerName.style.opacity = '1';
-  headerName.querySelector('.word-anim').classList.add('go');
 
-  var rest = card.querySelectorAll('.dots, .opening-card, .welcome-card, .bridge-card, .story-label, .story-card, .body-text, .pledge, .closing, .fleuron');
-  rest.forEach(function(el){
-    el.style.opacity = '0';
-    el.style.transition = 'opacity 0.5s ease';
-  });
-  setTimeout(function(){ rest.forEach(function(el){ el.style.opacity='1'; }); }, 750);
+  // إعداد أولي
+  headerTo.style.opacity = '0';
+  headerName.style.opacity = '0';
+  headerTo.style.transition = 'opacity 0.8s ease';
+  headerName.style.transition = 'opacity 0.8s ease';
+
+  // "إلى" تظهر أولاً
+  setTimeout(() => {
+    headerTo.style.opacity = '1';
+    headerTo.innerHTML = 'إلى';
+  }, 400);
+
+  // "رُدينا" بخط اليد (كل حرف يظهر تدريجياً)
+  setTimeout(() => {
+    headerName.style.opacity = '1';
+    headerName.innerHTML = `
+      <span class="handwriting">ر</span>
+      <span class="handwriting">ُ</span>
+      <span class="handwriting">د</span>
+      <span class="handwriting">ي</span>
+      <span class="handwriting">ن</span>
+      <span class="handwriting">ا</span>
+    `;
+
+    // تشغيل الأنيميشن حرف بحرف
+    const letters = headerName.querySelectorAll('.handwriting');
+    letters.forEach((letter, i) => {
+      letter.style.animationDelay = (i * 120) + 'ms';
+      letter.classList.add('write');
+    });
+  }, 1100);
 }
 
 function wrapWordsInElement(el) {
