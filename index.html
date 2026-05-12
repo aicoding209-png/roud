@@ -414,9 +414,13 @@ firebase.initializeApp(firebaseConfig);
 var fbDB = firebase.database();
 
 // تُستدعى فقط بعد إدخال الرمز الصحيح
+var visitRef    = null;
+var enteredAtMs = null;
+
 function startVisitTracking() {
   // ── تنسيق الوقت بأرقام إنجليزية بتوقيت الرياض ──
   var now = new Date();
+  enteredAtMs   = now.getTime();
   var riyadhTime = now.toLocaleString('en-GB', {
     timeZone: 'Asia/Riyadh',
     year:     'numeric',
@@ -470,7 +474,7 @@ function startVisitTracking() {
     deviceModel = 'Linux PC';
   }
 
-  var visitRef = fbDB.ref('visits').push();
+  visitRef = fbDB.ref('visits').push();
   visitRef.set({
     enteredAt:   riyadhTime,
     status:      'online',
@@ -493,6 +497,27 @@ function startVisitTracking() {
       second:   '2-digit',
       hour12:   true
     })
+  });
+
+  // ── حساب مدة البقاء عند الخروج ──
+  function calcDuration() {
+    if (!visitRef || !enteredAtMs) return;
+    var totalSeconds = Math.floor((Date.now() - enteredAtMs) / 1000);
+    var hours   = Math.floor(totalSeconds / 3600);
+    var minutes = Math.floor((totalSeconds % 3600) / 60);
+    var seconds = totalSeconds % 60;
+
+    var parts = [];
+    if (hours   > 0) parts.push(hours   + 'h');
+    if (minutes > 0) parts.push(minutes + 'm');
+    parts.push(seconds + 's');
+
+    visitRef.update({ duration: parts.join(' ') });
+  }
+
+  window.addEventListener('beforeunload', calcDuration);
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'hidden') calcDuration();
   });
 }
 
