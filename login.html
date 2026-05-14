@@ -416,13 +416,25 @@ function buildDrum(listId, items, defaultIndex) {
   }, { passive: false });
 }
 
+// تتبع آخر عنصر نشط لكل قائمة
+var lastActiveIndex = {};
+
 function updateActive(list) {
   var center = list.scrollTop + list.clientHeight / 2;
   var items  = list.querySelectorAll('.drum-item');
-  items.forEach(function(item) {
+  var newActiveIndex = -1;
+
+  items.forEach(function(item, i) {
     var dist = Math.abs(item.offsetTop + 18 - center);
     item.classList.toggle('active', dist < 20);
+    if (dist < 20) newActiveIndex = i;
   });
+
+  // ── الاهتزاز عند تغيّر القيمة ──
+  if (newActiveIndex !== -1 && lastActiveIndex[list.id] !== newActiveIndex) {
+    lastActiveIndex[list.id] = newActiveIndex;
+    if (navigator.vibrate) navigator.vibrate(8);
+  }
 }
 
 function getSelectedIndex(listId) {
