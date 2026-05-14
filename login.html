@@ -388,6 +388,9 @@ function buildDrum(listId, items, defaultIndex) {
 
   // ── الاهتزاز عبر touchmove (تفاعل مباشر) ──
   var lastVibIndex = -1;
+    list.addEventListener('touchstart', function() {
+    navigator.vibrate && navigator.vibrate(1);
+  }, { passive: true }); 
   list.addEventListener('touchmove', function() {
     var center = list.scrollTop + list.clientHeight / 2;
     var items  = list.querySelectorAll('.drum-item');
