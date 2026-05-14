@@ -804,8 +804,9 @@ var LETTER_HTML = `
 
   <p class="header-to" style="opacity:0">إلى</p>
   <h1 class="header-name" style="opacity:0">رُدينا</h1>
-
+   
   <div class="dots"><span class="dots-inner">· · · · ·</span></div>
+<div id="ValentineAnim" style="width:220px; height:220px; margin:0 auto;"></div>
 
   <div class="opening-card">
     <p class="dedication-text">
@@ -1124,6 +1125,14 @@ function openLetter() {
   loop:       true,
   autoplay:   true,
   path:       'Eyes.json'
+});
+
+  lottie.loadAnimation({
+  container:  document.getElementById('ValentineAnim'),
+  renderer:   'svg',
+  loop:       true,
+  autoplay:   true,
+  path:       'Valentine-letter.json'
 });
 
   // أخفِ الفقرات فوراً قبل أي ظهور للكارت
