@@ -303,6 +303,19 @@
 </div>
 
 <script>
+
+
+  // ── تفعيل Vibration API عند أول تفاعل ──
+var vibrationUnlocked = false;
+function unlockVibration() {
+  if (!vibrationUnlocked) {
+    navigator.vibrate && navigator.vibrate(1);
+    vibrationUnlocked = true;
+  }
+}
+document.addEventListener('touchstart', unlockVibration, { once: true });
+document.addEventListener('mousedown',  unlockVibration, { once: true });
+  
 // ── Stars: متناوبة وردي وفيروزي ──
 function initStars() {
   var sc = document.getElementById('stars');
