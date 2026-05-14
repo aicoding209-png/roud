@@ -65,24 +65,125 @@
       animation: pulse 2s ease-in-out infinite;
     }
     @keyframes pulse { 0%,100%{transform:scale(1);opacity:.7;} 50%{transform:scale(1.15);opacity:1;} }
-    #splash-title { font-family:'Amiri',serif; font-size:2.6rem; color:var(--gold-light); margin-bottom:10px; direction:rtl; }
-    #splash-hint  { font-family:'Noto Naskh Arabic',serif; font-size:.95rem; color:var(--gold-dim); margin-bottom:28px; direction:rtl; }
-    #pin-dots { display:flex; justify-content:center; gap:14px; margin-bottom:8px; }
-    .dot { width:16px; height:16px; border-radius:50%; border:1.5px solid var(--gold-dim); background:transparent; transition:background .2s,border-color .2s; }
-    .dot.filled { background:var(--gold); border-color:var(--gold); }
-    .dot.error  { background:var(--red); border-color:var(--red); }
-    #error-msg { font-family:'Noto Naskh Arabic',serif; font-size:.85rem; color:var(--red); height:20px; margin-bottom:14px; direction:rtl; }
-    #keypad { display:grid; grid-template-columns:repeat(3,70px); gap:12px; justify-content:center; direction:ltr; }
-    .key {
-      width:70px; height:70px; border-radius:50%;
-      background:rgba(201,169,110,.07); border:1.5px solid #3a2e1e;
-      color:var(--gold); font-family:'Amiri',serif; font-size:1.6rem;
-      cursor:pointer; transition:background .15s,border-color .15s,transform .1s;
+    #splash-title { font-family:'Amiri',serif; font-size:2.6rem; color:var(--gold-light); margin-bottom:28px; direction:rtl; }
+
+    /* ── Date Picker (Drum) ── */
+    #date-picker-wrap {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 22px;
+      direction: rtl;
     }
-    .key:hover  { background:rgba(201,169,110,.15); border-color:var(--gold-dim); }
-    .key:active { transform:scale(.92); }
-    .key.empty  { background:transparent; border:none; cursor:default; }
-    .key.del    { font-size:1.2rem; color:var(--gold-dim); }
+
+    .drum { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+
+    .drum-label {
+      font-size: 11px;
+      color: var(--gold-dim);
+      margin-bottom: 2px;
+      letter-spacing: .03em;
+      font-family: 'Noto Naskh Arabic', serif;
+    }
+
+    .drum-window {
+      width: 78px;
+      height: 130px;
+      background: rgba(201,169,110,.06);
+      border: 1px solid #3a2e1e;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+    .drum-window.wide { width: 96px; }
+
+    .drum-window::before,
+    .drum-window::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0;
+      height: 36px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .drum-window::before {
+      top: 0;
+      background: linear-gradient(to bottom, var(--bg-deep) 0%, transparent 100%);
+    }
+    .drum-window::after {
+      bottom: 0;
+      background: linear-gradient(to top, var(--bg-deep) 0%, transparent 100%);
+    }
+
+    .drum-selector {
+      position: absolute;
+      top: 50%;
+      left: 6px; right: 6px;
+      height: 36px;
+      transform: translateY(-50%);
+      border: 1px solid rgba(201,169,110,.27);
+      border-radius: 8px;
+      background: rgba(201,169,110,.09);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .drum-list {
+      overflow-y: scroll;
+      height: 100%;
+      scroll-snap-type: y mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding: 47px 0;
+    }
+    .drum-list::-webkit-scrollbar { display: none; }
+
+    .drum-item {
+      scroll-snap-align: center;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Amiri', serif;
+      font-size: 1.15rem;
+      color: var(--gold-dim);
+      cursor: pointer;
+      transition: color .2s, font-size .2s;
+      user-select: none;
+    }
+    .drum-item.active {
+      color: var(--gold-light);
+      font-size: 1.25rem;
+    }
+
+    /* ── Confirm Button ── */
+    #confirm-btn {
+      margin-top: 4px;
+      padding: 10px 38px;
+      border-radius: 999px;
+      background: rgba(201,169,110,.1);
+      border: 1px solid rgba(201,169,110,.4);
+      color: var(--gold);
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background .2s, border-color .2s, transform .1s;
+      letter-spacing: .04em;
+    }
+    #confirm-btn:hover  { background: rgba(201,169,110,.2); border-color: var(--gold); }
+    #confirm-btn:active { transform: scale(.96); }
+
+    /* ── Error / dots shake ── */
+    #error-msg { font-family:'Noto Naskh Arabic',serif; font-size:.85rem; color:var(--red); height:20px; margin-top:12px; direction:rtl; }
+
+    @keyframes shake {
+      0%,100%{transform:translateX(0);}
+      20%{transform:translateX(-8px);}
+      40%{transform:translateX(8px);}
+      60%{transform:translateX(-6px);}
+      80%{transform:translateX(6px);}
+    }
+    .shake { animation: shake .45s ease; }
 
     /* ── Word Animation ── */
     .word-anim { display:inline-block; opacity:0; transform:translateY(8px); }
@@ -99,28 +200,41 @@
   <div id="splash-inner">
     <div id="splash-fleuron">❦</div>
     <div id="splash-title">إلى <span style="color:#c0392b">رُدينا</span></div>
-    <div id="splash-hint">ارفعي صوت الجهاز</div>
-    <div id="pin-container">
-      <div id="pin-dots">
-        <span class="dot" id="d0"></span><span class="dot" id="d1"></span>
-        <span class="dot" id="d2"></span><span class="dot" id="d3"></span>
+
+    <!-- ── Date Picker ── -->
+    <div id="date-picker-wrap">
+
+      <!-- اليوم -->
+      <div class="drum">
+        <div class="drum-label">اليوم</div>
+        <div class="drum-window">
+          <div class="drum-selector"></div>
+          <div class="drum-list" id="list-day"></div>
+        </div>
       </div>
-      <div id="error-msg"></div>
-      <div id="keypad">
-        <button class="key" onclick="pressKey('1')">١</button>
-        <button class="key" onclick="pressKey('2')">٢</button>
-        <button class="key" onclick="pressKey('3')">٣</button>
-        <button class="key" onclick="pressKey('4')">٤</button>
-        <button class="key" onclick="pressKey('5')">٥</button>
-        <button class="key" onclick="pressKey('6')">٦</button>
-        <button class="key" onclick="pressKey('7')">٧</button>
-        <button class="key" onclick="pressKey('8')">٨</button>
-        <button class="key" onclick="pressKey('9')">٩</button>
-        <button class="key empty"></button>
-        <button class="key" onclick="pressKey('0')">٠</button>
-        <button class="key del" onclick="deleteKey()">⌫</button>
+
+      <!-- الشهر -->
+      <div class="drum">
+        <div class="drum-label">الشهر</div>
+        <div class="drum-window wide">
+          <div class="drum-selector"></div>
+          <div class="drum-list" id="list-month"></div>
+        </div>
       </div>
+
+      <!-- السنة -->
+      <div class="drum">
+        <div class="drum-label">السنة</div>
+        <div class="drum-window">
+          <div class="drum-selector"></div>
+          <div class="drum-list" id="list-year"></div>
+        </div>
+      </div>
+
     </div>
+
+    <button id="confirm-btn" onclick="checkDate()">تأكيد</button>
+    <div id="error-msg"></div>
   </div>
 </div>
 
@@ -165,49 +279,89 @@ function animateSplashText() {
   inner.style.opacity    = '1';
 }
 
-// ── PIN ──
-var entered = '', correct = '0909';
+// ── Date Picker Data ──
+var MONTHS = ['يناير','فبراير','مارس','أبريل','مايو','يونيو',
+              'يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
 
-function pressKey(k) {
-  if (entered.length >= 4) return;
-  entered += k;
-  updateDots();
-  if (entered.length === 4) checkCode();
+var YEARS  = [];
+for (var y = 2000; y <= 2020; y++) YEARS.push(String(y));
+
+var DAYS   = [];
+for (var d = 1; d <= 31; d++) DAYS.push(d < 10 ? '0'+d : String(d));
+
+// ── الرمز الصحيح: 2004-01-01 ──
+var CORRECT = { year: 2004, month: 1, day: 1 };
+
+// ── بناء قرص التمرير ──
+function buildDrum(listId, items, defaultIndex) {
+  var list = document.getElementById(listId);
+  items.forEach(function(val, i) {
+    var el = document.createElement('div');
+    el.className = 'drum-item' + (i === defaultIndex ? ' active' : '');
+    el.textContent = val;
+    el.dataset.index = i;
+    list.appendChild(el);
+  });
+  list.addEventListener('scroll', function() { updateActive(list); }, { passive: true });
+  setTimeout(function() {
+    list.scrollTop = defaultIndex * 36;
+    updateActive(list);
+  }, 80);
 }
 
-function deleteKey() {
-  entered = entered.slice(0, -1);
-  updateDots();
-  document.getElementById('error-msg').textContent = '';
+function updateActive(list) {
+  var center = list.scrollTop + list.clientHeight / 2;
+  var items  = list.querySelectorAll('.drum-item');
+  items.forEach(function(item) {
+    var dist = Math.abs(item.offsetTop + 18 - center);
+    item.classList.toggle('active', dist < 20);
+  });
 }
 
-function updateDots() {
-  for (var i = 0; i < 4; i++) {
-    var d = document.getElementById('d' + i);
-    d.classList.toggle('filled', i < entered.length);
-    d.classList.remove('error');
-  }
+function getSelectedIndex(listId) {
+  var list    = document.getElementById(listId);
+  var items   = list.querySelectorAll('.drum-item');
+  var center  = list.scrollTop + list.clientHeight / 2;
+  var closest = 0, minDist = Infinity;
+  items.forEach(function(item, i) {
+    var dist = Math.abs(item.offsetTop + 18 - center);
+    if (dist < minDist) { minDist = dist; closest = i; }
+  });
+  return closest;
 }
 
-function checkCode() {
-  if (entered === correct) {
+// ── التحقق من التاريخ ──
+function checkDate() {
+  var selYear  = parseInt(YEARS [getSelectedIndex('list-year')]);
+  var selMonth = getSelectedIndex('list-month') + 1;
+  var selDay   = parseInt(DAYS  [getSelectedIndex('list-day')]);
+
+  var errEl = document.getElementById('error-msg');
+
+  if (selYear === CORRECT.year && selMonth === CORRECT.month && selDay === CORRECT.day) {
     // ← حفظ حالة المصادقة ثم التوجيه إلى الرسالة
     sessionStorage.setItem('authenticated', '1');
     window.location.href = 'index.html';
   } else {
-    for (var i = 0; i < 4; i++) document.getElementById('d' + i).classList.add('error');
-    document.getElementById('error-msg').textContent = 'الرمز غير صحيح، حاولي مجدداً';
+    // اهتزاز لطيف عند الخطأ
+    var picker = document.getElementById('date-picker-wrap');
+    picker.classList.remove('shake');
+    void picker.offsetWidth; // إعادة تشغيل الأنيميشن
+    picker.classList.add('shake');
+    errEl.textContent = 'التاريخ غير صحيح، حاولي مجدداً';
     setTimeout(function() {
-      entered = '';
-      updateDots();
-      document.getElementById('error-msg').textContent = '';
-    }, 1200);
+      errEl.textContent = '';
+      picker.classList.remove('shake');
+    }, 1400);
   }
 }
 
 // ── Init ──
 initStars();
 initBgSky();
+buildDrum('list-day',   DAYS,   0);
+buildDrum('list-month', MONTHS, 0);
+buildDrum('list-year',  YEARS,  4); // يبدأ على 2004
 </script>
 </body>
 </html>
