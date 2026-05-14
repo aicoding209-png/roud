@@ -806,9 +806,23 @@ function initButterflies() {
   <h1 class="header-name" style="opacity:0">رُدينا</h1>
    
   <div class="lottie-divider" style="width:300px; height:60px; margin:0 auto;"></div>
-  <div id="ValentineAnim" style="width:220px; height:220px; margin:0 auto;"></div>
+
+<div id="ValentineAnim" style="width:220px; height:220px; margin:0 auto; cursor:pointer;"></div>
+
+<p id="openHint" style="
+  text-align:center;
+  font-family:'Amiri',serif;
+  font-style:italic;
+  color:var(--gold-dim);
+  font-size:.95rem;
+  margin-top:10px;
+  animation: twinkle 2s ease-in-out infinite alternate;
+">✦ اضغطي لفتح الرسالة ✦</p>
+
+<div id="letterContent" style="display:none; opacity:0; transition: opacity 1.2s ease;">
 
   <div class="opening-card">
+ 
     <p class="dedication-text">
       إلى الأنثى تلك الأميرة التي لم تكن حضورًا عابرًا في حياتي،<br>
       بل أقبلت كالبشائر المؤجَّلة، تأتي في اكتمالها و حين آن أوانها.
@@ -981,7 +995,7 @@ function initButterflies() {
       </span>
     </p>
   </div>
-
+</div>
 `;
 
 // ── تأثير العنوان ──
@@ -1118,12 +1132,28 @@ function openLetter() {
   path:       'Eyes.json'
 });
 
-  lottie.loadAnimation({
+lottie.loadAnimation({
   container:  document.getElementById('ValentineAnim'),
   renderer:   'svg',
   loop:       true,
   autoplay:   true,
   path:       'Valentine-letter.json'
+});
+
+document.getElementById('ValentineAnim').addEventListener('click', function() {
+  var content = document.getElementById('letterContent');
+  var hint    = document.getElementById('openHint');
+
+  content.style.display = 'block';
+  hint.style.display    = 'none';
+
+  setTimeout(function() {
+    content.style.opacity = '1';
+  }, 50);
+
+  // بعد الظهور نحذف الحدث عشان ما يتكرر
+  this.style.cursor = 'default';
+  this.removeEventListener('click', arguments.callee);
 });
 
   document.querySelectorAll('.lottie-divider').forEach(function(el) {
