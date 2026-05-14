@@ -8,8 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
-  <!-- Rive Runtime -->
-  <script src="https://unpkg.com/@rive-app/canvas@2.21.6/rive.js"></script>
+
   <style>
     :root {
       --bg-deep:    #0d0a0f;
@@ -63,18 +62,12 @@
     }
     #splash-inner { text-align: center; opacity: 0; margin-bottom: 80px; }
 
-    /* ── Rive Lotus ── */
-    #lotus-canvas {
-      width: 110px;
-      height: 110px;
-      margin: 0 auto 8px auto;
+    /* ── Lottie Woman ── */
+    #woman-lottie {
+      width: 130px;
+      height: 130px;
+      margin: 0 auto 4px auto;
       display: block;
-      /* تأثير توهج بنفسجي خفيف يناسب لون الزهرة */
-      filter: drop-shadow(0 0 12px rgba(180, 120, 255, 0.35));
-      transition: filter 0.6s ease;
-    }
-    #lotus-canvas.bloomed {
-      filter: drop-shadow(0 0 22px rgba(180, 120, 255, 0.7));
     }
 
     #splash-title { font-family:'Amiri',serif; font-size:2.6rem; color:var(--gold-light); margin-bottom:28px; direction:rtl; }
@@ -243,8 +236,8 @@
 <div id="splash">
   <div id="splash-inner">
 
-    <!-- ── Rive Lotus بدل القلب الأصفر ── -->
-    <canvas id="lotus-canvas" width="110" height="110"></canvas>
+    <!-- ── Lottie Woman بدل القلب الأصفر ── -->
+    <div id="woman-lottie"></div>
 
     <div id="splash-title">إلى <span style="color:#c0392b">رُدينا</span></div>
 
@@ -326,30 +319,15 @@ function animateSplashText() {
   inner.style.opacity    = '1';
 }
 
-// ── Rive Lotus ──
-var riveInstance = null;
-var lotusHasBloomed = false;
-
-function initLotus() {
-  riveInstance = new rive.Rive({
-    src: 'blooming-lotus.riv',
-    canvas: document.getElementById('lotus-canvas'),
-    autoplay: true,
-    stateMachines: 'Lotus',
-    onLoad: function() {
-      riveInstance.resizeDrawingSurfaceToCanvas();
-    }
+// ── Lottie Woman ──
+function initWoman() {
+  lottie.loadAnimation({
+    container:  document.getElementById('woman-lottie'),
+    renderer:   'svg',
+    loop:       true,
+    autoplay:   true,
+    path:       'Cute-Woman.json'
   });
-}
-
-function bloomLotus() {
-  if (!riveInstance || lotusHasBloomed) return;
-
-  // تشغيل الـ trigger "Dying" معكوساً — الزهرة تتفتح من البداية تلقائياً
-  // بما إن الانيميشن يبدأ من Closed ويمشي لـ BorningOpening تلقائياً
-  // نتركه يشتغل ونضيف فقط التوهج
-  lotusHasBloomed = true;
-  document.getElementById('lotus-canvas').classList.add('bloomed');
 }
 
 // ── Date Picker Data ──
@@ -378,8 +356,6 @@ function buildDrum(listId, items, defaultIndex) {
 
   list.addEventListener('scroll', function() {
     updateActive(list);
-    // تشغيل تأثير التوهج عند أول تمرير
-    bloomLotus();
   }, { passive: true });
 
   setTimeout(function() {
@@ -490,7 +466,7 @@ function checkDate() {
 // ── Init ──
 initStars();
 initBgSky();
-initLotus();
+initWoman();
 buildDrum('list-day',   DAYS,   0); // يبدأ من ١
 buildDrum('list-month', MONTHS, 0); // يبدأ من يناير
 buildDrum('list-year',  YEARS,  0); // يبدأ من ٢٠٠٠
