@@ -59,7 +59,7 @@
       display: flex; align-items: center; justify-content: center;
       min-height: 100vh; width: 100%;
     }
-    #splash-inner { text-align: center; opacity: 0; }
+    #splash-inner { text-align: center; opacity: 0; margin-bottom: 80px; }
     #splash-fleuron {
       font-size: 2.2rem; color: var(--gold); opacity: .7; margin-bottom: 16px;
       animation: pulse 2s ease-in-out infinite;
@@ -233,7 +233,7 @@
 
     </div>
 
-    <button id="confirm-btn" onclick="checkDate()">تأكيد</button>
+    <button id="confirm-btn" onclick="checkDate()">دخول</button>
     <div id="error-msg"></div>
   </div>
 </div>
@@ -307,6 +307,36 @@ function buildDrum(listId, items, defaultIndex) {
     list.scrollTop = defaultIndex * 36;
     updateActive(list);
   }, 80);
+
+  // ── دعم السحب بالماوس ──
+  var isDragging = false, startY = 0, startScroll = 0;
+  list.addEventListener('mousedown', function(e) {
+    isDragging  = true;
+    startY      = e.clientY;
+    startScroll = list.scrollTop;
+    list.style.cursor = 'grabbing';
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', function(e) {
+    if (!isDragging) return;
+    list.scrollTop = startScroll - (e.clientY - startY);
+  });
+  document.addEventListener('mouseup', function() {
+    if (!isDragging) return;
+    isDragging = false;
+    list.style.cursor = '';
+    // snap إلى أقرب عنصر
+    var idx = Math.round(list.scrollTop / 36);
+    list.scrollTo({ top: idx * 36, behavior: 'smooth' });
+  });
+
+  // ── دعم عجلة الماوس ──
+  list.addEventListener('wheel', function(e) {
+    e.preventDefault();
+    var idx = Math.round(list.scrollTop / 36) + (e.deltaY > 0 ? 1 : -1);
+    idx = Math.max(0, Math.min(items.length - 1, idx));
+    list.scrollTo({ top: idx * 36, behavior: 'smooth' });
+  }, { passive: false });
 }
 
 function updateActive(list) {
@@ -359,9 +389,9 @@ function checkDate() {
 // ── Init ──
 initStars();
 initBgSky();
-buildDrum('list-day',   DAYS,   0);
-buildDrum('list-month', MONTHS, 0);
-buildDrum('list-year',  YEARS,  4); // يبدأ على 2004
+buildDrum('list-day',   DAYS,   0); // يبدأ من ١
+buildDrum('list-month', MONTHS, 0); // يبدأ من يناير
+buildDrum('list-year',  YEARS,  0); // يبدأ من ٢٠٠٠
 </script>
 </body>
 </html>
