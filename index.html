@@ -677,12 +677,14 @@ Promise.all([
   fetch('Butterfly2.json').then(function(r){ return r.json(); })
 ])
 .then(function(results){
+  if (!sessionStorage.getItem('authenticated')) return; // ← هذا يوقف كل شي
   LOTTIE_DATA  = results[0];
   LOTTIE_DATA2 = results[1];
   initStars();
   initBgSky();
   openLetter();
 })
+  
 .catch(function(err){ console.error('خطأ في تحميل الفراشات:', err); });
 
 // ── Lottie Background Sky ──
