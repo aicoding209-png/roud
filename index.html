@@ -795,8 +795,8 @@ function initButterflies() {
   }
 }
 
-// ── محتوى الرسالة ──
-var LETTER_HTML = `
+
+  var LETTER_HTML = `
   <div class="corner corner-tl"></div>
   <div class="corner corner-tr"></div>
   <div class="corner corner-bl"></div>
@@ -805,8 +805,8 @@ var LETTER_HTML = `
   <p class="header-to" style="opacity:0">إلى</p>
   <h1 class="header-name" style="opacity:0">رُدينا</h1>
    
-  <div class="dots"><span class="dots-inner">· · · · ·</span></div>
-<div id="ValentineAnim" style="width:220px; height:220px; margin:0 auto;"></div>
+  <div class="lottie-divider" style="width:300px; height:60px; margin:0 auto;"></div>
+  <div id="ValentineAnim" style="width:220px; height:220px; margin:0 auto;"></div>
 
   <div class="opening-card">
     <p class="dedication-text">
@@ -815,7 +815,7 @@ var LETTER_HTML = `
     </p>
   </div>
 
-  <div class="dots"><span class="dots-inner">· · · · ·</span></div>
+  <div class="lottie-divider" style="width:300px; height:60px; margin:0 auto;"></div>
 
   <div class="welcome-card">
     <p class="welcome-text">
@@ -823,7 +823,7 @@ var LETTER_HTML = `
     </p>
   </div>
 
-  <div class="dots"><span class="dots-inner">· · ·</span></div>
+  <div class="lottie-divider" style="width:300px; height:60px; margin:0 auto;"></div>
 
   <div class="bridge-card">
     <p class="bridge-text">
@@ -831,7 +831,7 @@ var LETTER_HTML = `
     </p>
   </div>
 
-  <div class="dots"><span class="dots-inner">· · ·</span></div>
+  <div class="lottie-divider" style="width:300px; height:60px; margin:0 auto;"></div>
 
   <div class="story-label story-label--rose">❧&ensp;حين سمعتُ اسمكِ&ensp;❧</div>
   <div class="story-card story-card--rose">
@@ -861,7 +861,7 @@ var LETTER_HTML = `
     </p>
   </div>
 
-  <div class="dots"><span class="dots-inner">· · ·</span></div>
+  <div class="lottie-divider" style="width:300px; height:60px; margin:0 auto;"></div>
 
   <div class="story-label story-label--blue">❧&ensp;حين رأيتُكِ&ensp;❧</div>
   <div class="story-card story-card--blue">
@@ -890,24 +890,19 @@ var LETTER_HTML = `
     <p>
       وكيف أصف شعركِ يا وردتي؟ لن أصفه. الوصف يقع على ما تستوعبه العين وتنتهي إليه، وشعركِ لا ينتهي. هو كلامٌ لم تنطقي به يومًا، يقوله الليل عنكِ وأنتِ نائمة وأنتِ مستيقظة، تحملينه على كتفيكِ ولا تدرين. ورأيتُه، فعلمتُ أن ثمة أشياء خُلقت لترى لا لتُقال، ومن أراد قولها أساء إليها. وأنا لا أريد أن أُسيء.
     </p>
-
-    
     <p>
       وبينما كنتُ واقفًا أحاول أن أستوعب المشهد، قالوا لكِ: <em style="color:var(--gold-light)">انظري إليه.</em><br><br>
       فرفع الستار ورفعتِ رأسكِ... ورفعتِ معه قلبي من موضعه.
     </p>
 
-   <div id="EyesAnim" style="width:220px; height:220px; margin:16px auto;"></div>
+    <div id="EyesAnim" style="width:220px; height:220px; margin:16px auto;"></div>
 
     <p>
       وحتى استقرّت عيناكِ عليَّ، توقّف الزمن وحلَّ الصمت، وتبعثرت أفكاري حتى جمعتُها مرةً أخرى فعاد الزمن من جديد، واستدركتُ الحدث فابتعدتُ عن الباب سريعًا. لكن لم يكن ذلك خجلًا، بل كان انذهالًا؛ تلك النظرة كانت أقوى من ثباتي وأكبر من قدرتي على التماسك.
     </p>
-    
     <p style="color:#c9b8f0;">
       لم يكن إبعاد بصري عنكِ جفاءً ولا كان اختيارًا واعيًا، بل كان ارتباك الروح حين يداهمها ما لا تحتمل. حدث كل شيء بسرعةٍ أربكتني، كمن يفاجئه شيءٌ مندفعٌ نحوه فيتراجع بلا تفكير، لا خوفًا مما رأى بل من شدة ما أحسّ. لم أتوقع، ولم أستعد، ولم أرى إلا تلك الابتسامة الصامتة التي دفعتني بعيدًا بينما الصدمة وحدها كانت تتكفّل بكل شيء.
     </p>
-
-
     <p>
       لم تكن تلك الابتسامة عابرة، ولم تكن ملامح لطيفة ارتسمت على وجهكِ ثم مضت. كانت نافذةً انفتحت في صدري دفعةً واحدة، ونورًا دخل بلا استئذان، وسحرًا رقيقًا أصاب أعمق مكانٍ في الروح.
     </p>
@@ -916,7 +911,7 @@ var LETTER_HTML = `
     </p>
   </div>
 
-  <div class="dots"><span class="dots-inner">· · ·</span></div>
+  <div class="lottie-divider" style="width:300px; height:60px; margin:0 auto;"></div>
 
   <div class="story-label story-label--green">❧&ensp;حين سمعتُ صوتكِ&ensp;❧</div>
   <div class="story-card story-card--green">
@@ -931,7 +926,7 @@ var LETTER_HTML = `
     </p>
   </div>
 
-  <div class="dots"><span class="dots-inner">· · ·</span></div>
+  <div class="lottie-divider" style="width:300px; height:60px; margin:0 auto;"></div>
 
   <div class="body-text" style="color:#cfd8dc;">
     <p>وفي حكايتنا الصامتة يا حبيبتي، تختبئ أمورٌ خفيّة وصامتة أيضاً لا يعلمها أحدٌ من البشر، ولا أدري ما الذي كان يدفعني إليها.</p>
@@ -941,25 +936,22 @@ var LETTER_HTML = `
       أُقبِّلُ ذا الجدارَ وذا الجدارا<br><br>
       وما حبُّ الديارِ شغفنَ قلبي<br>
       ولكن حبُّ من سكنَ الديارا
-     </div>
-
-
+    </div>
     <p style="color:#a8e6cf; font-family:'Amiri',serif;">ومن عجائب القدر ودقائقه أن جمعنا الله في مكانٍ واحد لم نأته إلا قليلًا، منفذٌ بين بلدين يمرّ منه الناسُ مرورَ العابرين ولا يلتفتون. مررتُ فيه يومًا فلم أرَكِ، لكنّكِ كنتِ هناك، قريبةً مني ولا أعلم، وما كان بيننا إلا خطواتٌ لم تُقطع وزمنٌ لم يأذن بعد للقاء أن يتم. ولم يخطر ببالي حينها أنّ هذا المنفذ الذي لا يعرفه إلا المسافرون سيصبح يومًا منفذَ نصيبي، ذلك المنفذ الذي قدّر الله أن تعبري منه إلى حياتي.</p>
     <p style="color:#a8e6cf; font-family:'Amiri',serif;">وكأنّ الله أراد أن يكون أول القرب على حدودٍ بين عالمين؛ لحظةٌ بين الرحيل والوصول، بين ما كان وما سيكون، بين غريبين لم يعرفا بعدُ أنّهما كانا يبحثان عن بعض.</p>
     <p style="color:#a8e6cf; font-family:'Amiri',serif;">كأنّ القدر ادّخر لقاءنا في موضعٍ بعيد عن الاعتياد، ليكون أشدَّ تأثيرًا وأعمق دلالة؛ فيشهد أنّ ما يجمعه الله لا يحتاج إلى تكرار المكان ولا طول الأيام، بل يكفيه منفذٌ واحد.</p>
+  </div>
 
-    </div>
-<p style="
-  color: #a8e6cf;
-  font-family: 'Amiri', serif;
-  font-weight: bold;
-  text-shadow: 0 0 3px rgba(168, 230, 207, 0.4);
-">
-  واليوم، وقد صرتِ زوجتي، أشعر أنّ الله لم يرزقني زوجة فحسب، بل رزقني سكنًا، ومودّةً، ورحمةً، وقلبًا أودّ لو أقضي بقربه العمر كلّه، ممتنًّا لهذه النعمة في كل يوم.
-</p>
-</div>
+  <p style="
+    color: #a8e6cf;
+    font-family: 'Amiri', serif;
+    font-weight: bold;
+    text-shadow: 0 0 3px rgba(168, 230, 207, 0.4);
+  ">
+    واليوم، وقد صرتِ زوجتي، أشعر أنّ الله لم يرزقني زوجة فحسب، بل رزقني سكنًا، ومودّةً، ورحمةً، وقلبًا أودّ لو أقضي بقربه العمر كلّه، ممتنًّا لهذه النعمة في كل يوم.
+  </p>
 
-  <div class="dots"><span class="dots-inner">· · ·</span></div>
+  <div class="lottie-divider" style="width:300px; height:60px; margin:0 auto;"></div>
 
   <div class="pledge">
     <div class="pledge-title">أعاهدكِ يا <span class="r-name">رُدينا</span>، يا زوجتي وحبيبتي،</div>
@@ -967,7 +959,7 @@ var LETTER_HTML = `
     <p>أعاهدكِ أن أحبّكِ كما أحببتكِ في تلك النظرة الأولى: بدهشةٍ لا تشيخ، وبرغبةٍ صادقة، وبقلبٍ يعرف يقينًا أنّ بعض الناس لا يدخلون حياتنا مصادفة، بل يدخلونها ليصبحوا الحياة نفسها.</p>
   </div>
 
-   <div class="closing">
+  <div class="closing">
     <div class="closing-lines">
       <span class="r-name">رُدينا</span>،<br>
       يا مَن لم تنطقْ بشيء،<br>
@@ -988,7 +980,6 @@ var LETTER_HTML = `
         <img src="sign.png" alt="" style="height:55px; width:auto; vertical-align:middle;">
       </span>
     </p>
-  </div>
   </div>
 
 `;
@@ -1076,9 +1067,9 @@ function initDotsReveal() {
     });
   }, { threshold: 0.5 });
 
-  document.querySelectorAll('.dots').forEach(function(el) {
-    dotsObserver.observe(el);
-  });
+  document.querySelectorAll('.lottie-divider').forEach(function(el) {
+  dotsObserver.observe(el);
+});
 }
 
 // ── إخفاء الفقرات وإظهارها بتتابع ──
@@ -1133,6 +1124,16 @@ function openLetter() {
   loop:       true,
   autoplay:   true,
   path:       'Valentine-letter.json'
+});
+
+  document.querySelectorAll('.lottie-divider').forEach(function(el) {
+  lottie.loadAnimation({
+    container:  el,
+    renderer:   'svg',
+    loop:       true,
+    autoplay:   true,
+    path:       'divider.json'
+  });
 });
 
   // أخفِ الفقرات فوراً قبل أي ظهور للكارت
