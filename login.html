@@ -200,7 +200,7 @@
       position: fixed; inset: 0;
       z-index: 100;
       display: flex; align-items: center; justify-content: center;
-      background: var(--bg-deep);
+      background: white;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.6s ease;
@@ -210,15 +210,11 @@
       pointer-events: all;
     }
 
-    /* ── الفرقاعات الثلاث ── */
+    /* ── الفرقاعة الواحدة في المنتصف ── */
     .fw {
-      position: absolute;
       width: 60%;
       height: 60%;
     }
-    #fireworks-lottie-1 { top: -10%;    left: -10%;  filter: hue-rotate(0deg);   }
-    #fireworks-lottie-2 { top: -10%;    right: -10%; filter: hue-rotate(120deg); }
-    #fireworks-lottie-3 { bottom: -10%; left: 20%;   filter: hue-rotate(240deg); }
 
   </style>
 </head>
@@ -229,14 +225,11 @@
 
 <div id="fireworks-overlay">
   <div id="fireworks-lottie-1" class="fw"></div>
-  <div id="fireworks-lottie-2" class="fw"></div>
-  <div id="fireworks-lottie-3" class="fw"></div>
 </div>
 
 <div id="splash">
   <div id="splash-inner">
 
-    <!-- ── Lottie Woman بدل القلب الأصفر ── -->
     <div id="woman-lottie"></div>
 
     <div id="splash-title">إلى <span style="color:#c0392b">رُدينا</span></div>
@@ -380,7 +373,6 @@ function buildDrum(listId, items, defaultIndex) {
     if (!isDragging) return;
     isDragging = false;
     list.style.cursor = '';
-    // snap إلى أقرب عنصر
     var idx = Math.round(list.scrollTop / 36);
     list.scrollTo({ top: idx * 36, behavior: 'smooth' });
   });
@@ -430,30 +422,26 @@ function checkDate() {
     var overlay = document.getElementById('fireworks-overlay');
     overlay.classList.add('visible');
 
-    // تشغيل الفرقاعات الثلاث بتأخير متتالي
-    ['fireworks-lottie-1', 'fireworks-lottie-2', 'fireworks-lottie-3'].forEach(function(id, i) {
-      setTimeout(function() {
-        lottie.loadAnimation({
-          container:  document.getElementById(id),
-          renderer:   'svg',
-          loop:       false,
-          autoplay:   true,
-          path:       'fireworks.json'
-        });
-      }, i * 300); // كل فرقاعة تبدأ بعد 300ms من السابقة
+    // تشغيل أنيميشن واحد فقط في المنتصف بلونه الأصلي
+    lottie.loadAnimation({
+      container:  document.getElementById('fireworks-lottie-1'),
+      renderer:   'svg',
+      loop:       false,
+      autoplay:   true,
+      path:       'fireworks.json'
     });
 
-    // الانتقال بعد انتهاء الأنيميشن (3 ثواني)
+    // الانتقال بعد 4 ثواني
     setTimeout(function() {
       window.location.href = 'index.html';
-    }, 3000);
+    }, 4000);
   }
   
   else {
     // اهتزاز لطيف عند الخطأ
     var picker = document.getElementById('date-picker-wrap');
     picker.classList.remove('shake');
-    void picker.offsetWidth; // إعادة تشغيل الأنيميشن
+    void picker.offsetWidth;
     picker.classList.add('shake');
     errEl.textContent = 'التاريخ غير صحيح، حاولي مره ثانية';
     setTimeout(function() {
@@ -467,9 +455,9 @@ function checkDate() {
 initStars();
 initBgSky();
 initWoman();
-buildDrum('list-day',   DAYS,   0); // يبدأ من ١
-buildDrum('list-month', MONTHS, 0); // يبدأ من يناير
-buildDrum('list-year',  YEARS,  0); // يبدأ من ٢٠٠٠
+buildDrum('list-day',   DAYS,   0);
+buildDrum('list-month', MONTHS, 0);
+buildDrum('list-year',  YEARS,  0);
 </script>
 </body>
 </html>
