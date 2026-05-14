@@ -386,6 +386,23 @@ function buildDrum(listId, items, defaultIndex) {
     updateActive(list);
   }, { passive: true });
 
+  // ── الاهتزاز عبر touchmove (تفاعل مباشر) ──
+  var lastVibIndex = -1;
+  list.addEventListener('touchmove', function() {
+    var center = list.scrollTop + list.clientHeight / 2;
+    var items  = list.querySelectorAll('.drum-item');
+    var current = -1;
+    items.forEach(function(item, i) {
+      var dist = Math.abs(item.offsetTop + 18 - center);
+      if (dist < 20) current = i;
+    });
+    if (current !== -1 && current !== lastVibIndex) {
+      lastVibIndex = current;
+      if (navigator.vibrate) navigator.vibrate(8);
+    }
+  }, { passive: true });
+  
+
   setTimeout(function() {
     list.scrollTop = defaultIndex * 36;
     updateActive(list);
@@ -433,10 +450,9 @@ function updateActive(list) {
     if (dist < 20) newActiveIndex = i;
   });
 
-  // ── الاهتزاز عند تغيّر القيمة ──
-  if (newActiveIndex !== -1 && lastActiveIndex[list.id] !== newActiveIndex) {
+// ── تحديث آخر index نشط فقط ──
+  if (newActiveIndex !== -1) {
     lastActiveIndex[list.id] = newActiveIndex;
-    if (navigator.vibrate) navigator.vibrate(8);
   }
 }
 
