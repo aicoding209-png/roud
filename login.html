@@ -378,7 +378,7 @@ function checkDate() {
     picker.classList.remove('shake');
     void picker.offsetWidth; // إعادة تشغيل الأنيميشن
     picker.classList.add('shake');
-    errEl.textContent = 'التاريخ غير صحيح، حاولي مجدداً';
+    errEl.textContent = 'التاريخ غير صحيح، حاولي مره ثانية';
     setTimeout(function() {
       errEl.textContent = '';
       picker.classList.remove('shake');
