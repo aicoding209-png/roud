@@ -1146,6 +1146,20 @@ lottie.loadAnimation({
 });
 
 document.getElementById('ValentineAnim').addEventListener('click', function() {
+  // ✅ تشغيل الصوت فوراً داخل حدث المستخدم — مضمون على كل المتصفحات
+  var music = document.getElementById('bgMusic');
+  music.muted = false;
+  music.volume = 0;
+  music.play().then(function() {
+    // رفع الصوت تدريجياً بعد التشغيل
+    var vol = 0;
+    var fade = setInterval(function() {
+      vol = Math.min(vol + 0.05, 1);
+      music.volume = vol;
+      if (vol >= 1) clearInterval(fade);
+    }, 80);
+  }).catch(function(e) { console.warn('Audio blocked:', e); });
+
   // أخفِ الأنيميشن الأول والتلميح
   document.getElementById('ValentineAnim').style.display = 'none';
   document.getElementById('openHint').style.display      = 'none';
@@ -1228,7 +1242,6 @@ document.getElementById('ValentineAnim').addEventListener('click', function() {
           initDotsReveal();
         }, 2000);
  
-        document.getElementById('bgMusic').play();
         startVisitTracking();
       }, 100);
     }, 300);
@@ -1325,7 +1338,7 @@ function spawnStars(cx, cy) {
   
 </script>
 
-<audio id="bgMusic" src="music.mp3" loop></audio>
+<audio id="bgMusic" src="music.mp3" loop muted></audio>
 
 </body>
 </html>
